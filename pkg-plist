@@ -1,0 +1,14 @@
+pkg/bro.xml
+pkg/bro.inc
+/etc/inc/priv/bro.priv.inc
+www/shortcuts/pkg_bro.inc
+pkg/bro_broctl.xml
+pkg/bro_cluster.xml
+pkg/bro_script.xml
+pkg/bro_log.xml
+pkg/bro_sync.xml
+www/bro_alerts.php
+www/bro_alert_data.php
+www/select_box_file.php
+%%DATADIR%%/info.xml
+@dir /etc/inc/priv

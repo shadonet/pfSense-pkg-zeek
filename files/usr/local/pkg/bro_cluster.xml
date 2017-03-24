@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE packagegui SYSTEM "../schema/packages.dtd">
+<?xml-stylesheet type="text/xsl" href="../xsl/package.xsl"?>
+<packagegui>
+	<copyright>
+<![CDATA[
+/* $Id$ */
+/* ====================================================================================== */
+/*
+	bro.xml
+	part of pfSense (https://www.pfSense.org/)
+	Copyright (C) 2016 Prosper DOKO
+	All rights reserved.
+*/
+/* ====================================================================================== */
+/*
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+
+
+	1. Redistributions of source code must retain the above copyright notice,
+	   this list of conditions and the following disclaimer.
+
+	2. Redistributions in binary form must reproduce the above copyright
+	   notice, this list of conditions and the following disclaimer in the
+	   documentation and/or other materials provided with the distribution.
+
+
+	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+	POSSIBILITY OF SUCH DAMAGE.
+*/
+/* ====================================================================================== */
+	]]>
+	</copyright>
+	<name>brocluster</name>
+	<title>Bro NSM: Bro Clustering</title>
+	<include_file>/usr/local/pkg/bro.inc</include_file>
+  <tabs>
+		<tab>
+			<text>General</text>
+			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+		</tab>
+		<tab>
+			<text>BroControl Config</text>
+			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
+		</tab>
+		<tab>
+			<text>Bro Cluster</text>
+			<url>/pkg_edit.php?xml=bro_cluster.xml&amp;id=0</url>
+      	<active/>
+		</tab>
+		<tab>
+			<text>Bro Scripts</text>
+			<url>/pkg.php?xml=bro_script.xml</url>
+		</tab>
+    <tab>
+			<text>Log Mgmt</text>
+			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
+		</tab>
+    <tab>
+			<text>Real Time Inspection</text>
+			<url>/bro_alerts.php</url>
+		</tab>
+    <tab>
+			<text>XMLRPC Sync</text>
+			<url>/pkg_edit.php?xml=bro_sync.xml</url>
+		</tab>
+	</tabs>
+	<fields>
+    <field>
+  			<name>Basic Cluster Configuration</name>
+  			<type>listtopic</type>
+  	</field>
+		<field>
+			<fielddescr>Enable Bro Cluster</fielddescr>
+			<fieldname>enable_cluster</fieldname>
+			<description>Check to enable the cluster mode.</description>
+			<sethelp>
+				<![CDATA[
+				<strong><span class="errmsg">Note:</span> If enabled, Bro stand-alone mode will be disabled.</strong>
+				]]>
+			</sethelp>
+			<type>checkbox</type>
+		</field>
+    <field>
+			<fielddescr>Manager Host</fielddescr>
+			<fieldname>manager_host</fieldname>
+			<description>Enter the hostname or IP address of the manager host.</description>
+			<type>input</type>
+			<size>60</size>
+			<default_value>localhost</default_value>
+		</field>
+		<field>
+			<fielddescr>Proxy Host</fielddescr>
+			<fieldname>proxy_host</fieldname>
+			<description>Enter the hostname or IP address of the proxy host.</description>
+			<type>input</type>
+			<size>60</size>
+			<default_value>localhost</default_value>
+		</field>
+		<field>
+			<fielddescr>Worker 1 Host</fielddescr>
+			<fieldname>worker1_host</fieldname>
+			<description>Enter the hostname or IP address of the first worker host.</description>
+			<type>input</type>
+			<size>60</size>
+			<default_value>localhost</default_value>
+		</field>
+		<field>
+			<fielddescr>Worker 1 Interface</fielddescr>
+			<fieldname>worker1_interface</fieldname>
+			<description>Select the worker 1 interface.</description>
+      <type>interfaces_selection</type>
+			<multiple/>
+		</field>
+		<field>
+			<fielddescr>Worker 2 Host</fielddescr>
+			<fieldname>worker2_host</fieldname>
+			<description>Enter the hostname or IP address of the second worker host.</description>
+			<type>input</type>
+			<size>60</size>
+			<default_value>localhost</default_value>
+		</field>
+		<field>
+			<fielddescr>Worker 2 Interface</fielddescr>
+			<fieldname>worker2_interface</fieldname>
+			<description>Select the worker 2 interface.</description>
+      <type>interfaces_selection</type>
+			<multiple/>
+		</field>
+	</fields>
+	<custom_php_validation_command>
+		<![CDATA[
+		if (!empty($_POST) && bro_enabled()) {
+			log_error("Bro standalone mode is enable. You must disable Bro standalone mode under Services - Bro NSM - General Settings.");
+		}
+		bro_validate_cluster($_POST, $input_errors);
+		]]>
+	</custom_php_validation_command>
+	<custom_php_resync_config_command>
+		bro_cluster_resync();
+	</custom_php_resync_config_command>
+</packagegui>

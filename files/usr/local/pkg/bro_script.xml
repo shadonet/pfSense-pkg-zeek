@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE packagegui SYSTEM "../schema/packages.dtd">
+<?xml-stylesheet type="text/xsl" href="../xsl/package.xsl"?>
+<packagegui>
+	<copyright>
+<![CDATA[
+/* $Id$ */
+/* ====================================================================================== */
+/*
+	bro.xml
+	part of pfSense (https://www.pfSense.org/)
+	Copyright (C) 2016 Prosper DOKO
+	All rights reserved.
+*/
+/* ====================================================================================== */
+/*
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+
+
+	1. Redistributions of source code must retain the above copyright notice,
+	   this list of conditions and the following disclaimer.
+
+	2. Redistributions in binary form must reproduce the above copyright
+	   notice, this list of conditions and the following disclaimer in the
+	   documentation and/or other materials provided with the distribution.
+
+
+	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+	POSSIBILITY OF SUCH DAMAGE.
+*/
+/* ====================================================================================== */
+	]]>
+	</copyright>
+	<name>broscript</name>
+	<title>Bro NSM: Scripts Mgmt</title>
+	<include_file>/usr/local/pkg/bro.inc</include_file>
+	<delete_string>A Bro script has been deleted.</delete_string>
+	<addedit_string>A Bro script has been created/modified.</addedit_string>
+  <tabs>
+		<tab>
+			<text>General</text>
+			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+		</tab>
+		<tab>
+			<text>BroControl Config</text>
+			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
+		</tab>
+		<tab>
+			<text>Bro Cluster</text>
+			<url>/pkg_edit.php?xml=bro_cluster.xml&amp;id=0</url>
+		</tab>
+		<tab>
+			<text>Bro Scripts</text>
+			<url>/pkg.php?xml=bro_script.xml</url>
+      <active/>
+		</tab>
+    <tab>
+			<text>Log Mgmt</text>
+			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
+		</tab>
+    <tab>
+			<text>Real Time Inspection</text>
+			<url>/bro_alerts.php</url>
+		</tab>
+    <tab>
+			<text>XMLRPC Sync</text>
+			<url>/pkg_edit.php?xml=bro_sync.xml</url>
+		</tab>
+	</tabs>
+	<adddeleteeditpagefields>
+		<columnitem>
+			<fielddescr>Script Name</fielddescr>
+			<fieldname>scriptname</fieldname>
+		</columnitem>
+		<columnitem>
+			<fielddescr>Description</fielddescr>
+			<fieldname>description</fieldname>
+		</columnitem>
+	</adddeleteeditpagefields>
+  <fields>
+    <field>
+			<name>General Settings</name>
+			<type>listtopic</type>
+		</field>
+		<field>
+			<fielddescr>Script Name</fielddescr>
+			<fieldname>scriptname</fieldname>
+			<description>Enter the name of script here.</description>
+			<type>input</type>
+			<size>20</size>
+		</field>
+    <field>
+			<fielddescr>Bro Script Path</fielddescr>
+			<fieldname>broscriptpath</fieldname>
+			<description>
+        <![CDATA[
+				Enter your Bro script's absolute path (e.g.: "/usr/local/www/detect_ddos.bro" or "/tmp/detect_ddos.bro")<br/>
+				<strong>Note: Be sure that the path is correct.</strong>
+				]]>
+      </description>
+      <type>input</type>
+			<size>60</size>
+      <required/>
+		</field>
+		<field>
+			<fielddescr>Description</fielddescr>
+			<fieldname>description</fieldname>
+			<description>You may enter your script description here.</description>
+			<type>input</type>
+			<size>60</size>
+		</field>
+	</fields>
+	<custom_php_validation_command>
+		bro_validate_script($_POST, $input_errors);
+	</custom_php_validation_command>
+	<custom_delete_php_command>
+			bro_script_resync();
+	</custom_delete_php_command>
+	<custom_php_resync_config_command>
+		bro_script_resync();
+	</custom_php_resync_config_command>
+</packagegui>

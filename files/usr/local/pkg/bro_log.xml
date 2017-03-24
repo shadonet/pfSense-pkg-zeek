@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE packagegui SYSTEM "../schema/packages.dtd">
+<?xml-stylesheet type="text/xsl" href="../xsl/package.xsl"?>
+<packagegui>
+	<copyright>
+<![CDATA[
+/* $Id$ */
+/* ====================================================================================== */
+/*
+	bro.xml
+	part of pfSense (https://www.pfSense.org/)
+	Copyright (C) 2016 Prosper DOKO
+	All rights reserved.
+*/
+/* ====================================================================================== */
+/*
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+
+
+	1. Redistributions of source code must retain the above copyright notice,
+	   this list of conditions and the following disclaimer.
+
+	2. Redistributions in binary form must reproduce the above copyright
+	   notice, this list of conditions and the following disclaimer in the
+	   documentation and/or other materials provided with the distribution.
+
+
+	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+	POSSIBILITY OF SUCH DAMAGE.
+*/
+/* ====================================================================================== */
+	]]>
+	</copyright>
+	<name>brolog</name>
+	<title>Bro NSM: Log Mgmt</title>
+	<include_file>/usr/local/pkg/bro.inc</include_file>
+  <tabs>
+		<tab>
+			<text>General</text>
+			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+		</tab>
+		<tab>
+			<text>BroControl Config</text>
+			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
+		</tab>
+		<tab>
+			<text>Bro Cluster</text>
+			<url>/pkg_edit.php?xml=bro_cluster.xml&amp;id=0</url>
+		</tab>
+		<tab>
+			<text>Bro Scripts</text>
+			<url>/pkg.php?xml=bro_script.xml</url>
+		</tab>
+    <tab>
+			<text>Log Mgmt</text>
+			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
+      <active/>
+		</tab>
+    <tab>
+			<text>Real Time Inspection</text>
+			<url>/bro_alerts.php</url>
+		</tab>
+    <tab>
+			<text>XMLRPC Sync</text>
+			<url>/pkg_edit.php?xml=bro_sync.xml</url>
+		</tab>
+	</tabs>
+  <fields>
+    <field>
+			<name>General Settings</name>
+			<type>listtopic</type>
+		</field>
+    <field>
+			<fielddescr>Remove Bro Logs on Package Uninstall</fielddescr>
+			<fieldname>remove_bro_log</fieldname>
+			<description>Bro log file will be removed when bro package is uninstall.</description>
+			<type>checkbox</type>
+		</field>
+	</fields>
+	<custom_php_resync_config_command>
+		bro_log_resync();
+	</custom_php_resync_config_command>
+</packagegui>
