@@ -12,7 +12,7 @@ This package has been tested on PfSense 2.3.1 amd64. Maybe it might not work wit
 
 # Installation
 
-## Download the generated package through [pfSense-pkg-bro](https://drive.google.com/file/d/0B0NDS8_WgeQMUDJ1MTVHU3BvNnc/view?usp=sharing)
+## Download the generated package through [pfSense-pkg-bro](https://github.com/shadonet/pfSense-pkg-bro/files/1248279/pfSense-pkg-bro-2.4.1.zip)
 
 ## Copy the package from your local machine to your firewall
 
