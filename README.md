@@ -7,7 +7,7 @@ Bro Network Security Monitor package for pfSense router/firewall
 
 
 # Compatibility
-This package has been tested on PfSense 2.3.1 amd64. Maybe it might not work with older versions of pfSense.
+This package has been tested on PfSense 2.3.2 amd64. Maybe it might not work with older versions of pfSense.
 <br><br>
 
 # Installation
