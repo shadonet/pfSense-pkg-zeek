@@ -3,47 +3,47 @@
 <?xml-stylesheet type="text/xsl" href="../xsl/package.xsl"?>
 <packagegui>
 	<copyright>
-<![CDATA[
-/* $Id$ */
-/* ====================================================================================== */
-/*
-	bro.xml
-	part of pfSense (https://www.pfSense.org/)
-	Copyright (C) 2016 Prosper DOKO
-	All rights reserved.
-*/
-/* ====================================================================================== */
-/*
-	Redistribution and use in source and binary forms, with or without
-	modification, are permitted provided that the following conditions are met:
+		<![CDATA[
+		/* $Id$ */
+		/* ====================================================================================== */
+		/*
+		bro.xml
+		part of pfSense (https://www.pfSense.org/)
+		Copyright (C) 2016 Prosper DOKO
+		All rights reserved.
+		*/
+		/* ====================================================================================== */
+		/*
+		Redistribution and use in source and binary forms, with or without
+		modification, are permitted provided that the following conditions are met:
 
 
-	1. Redistributions of source code must retain the above copyright notice,
-	   this list of conditions and the following disclaimer.
+		1. Redistributions of source code must retain the above copyright notice,
+		this list of conditions and the following disclaimer.
 
-	2. Redistributions in binary form must reproduce the above copyright
-	   notice, this list of conditions and the following disclaimer in the
-	   documentation and/or other materials provided with the distribution.
+		2. Redistributions in binary form must reproduce the above copyright
+		notice, this list of conditions and the following disclaimer in the
+		documentation and/or other materials provided with the distribution.
 
 
-	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
-	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
-	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
-	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-	POSSIBILITY OF SUCH DAMAGE.
-*/
-/* ====================================================================================== */
-	]]>
+		THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+		INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+		AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+		AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+		OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+		SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+		INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+		CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+		ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+		POSSIBILITY OF SUCH DAMAGE.
+		*/
+		/* ====================================================================================== */
+		]]>
 	</copyright>
 	<name>brocontrol</name>
 	<title>Bro NSM: BroControl Settings</title>
 	<include_file>/usr/local/pkg/bro.inc</include_file>
-  <tabs>
+	<tabs>
 		<tab>
 			<text>General</text>
 			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
@@ -51,7 +51,7 @@
 		<tab>
 			<text>BroControl Config</text>
 			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
-      <active/>
+			<active/>
 		</tab>
 		<tab>
 			<text>Bro Cluster</text>
@@ -61,120 +61,120 @@
 			<text>Bro Scripts</text>
 			<url>/pkg.php?xml=bro_script.xml</url>
 		</tab>
-    <tab>
+		<tab>
 			<text>Log Mgmt</text>
 			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
 		</tab>
-    <tab>
+		<tab>
 			<text>Real Time Inspection</text>
 			<url>/bro_alerts.php</url>
 		</tab>
-    <tab>
+		<tab>
 			<text>XMLRPC Sync</text>
 			<url>/pkg_edit.php?xml=bro_sync.xml</url>
 		</tab>
 	</tabs>
-  <fields>
-    <field>
+	<fields>
+		<field>
 			<name>Mails Options</name>
 			<type>listtopic</type>
 		</field>
-    <field>
+		<field>
 			<fielddescr>Administrator's Email</fielddescr>
 			<fieldname>admin_email</fieldname>
 			<description>Recipient address for all emails sent out by Bro and BroControl.</description>
 			<type>input</type>
 			<size>60</size>
-      <required/>
+			<required/>
 			<default_value>root@localhost</default_value>
 		</field>
-    <field>
+		<field>
 			<fielddescr>Mail Connection Summary</fielddescr>
 			<fieldname>mail_connection_summary</fieldname>
-      <description>
-				<![CDATA[
-        Mail connection summary reports each log rotation interval.
-        A value of 1 means mail connection summaries, and a value of 0 means do not mail connection summaries.
-				]]>
-			</description>
-      <type>input</type>
-			<size>5</size>
-      <default_value>1</default_value>
-		</field>
-    <field>
-			<fielddescr>Minimum Disk space</fielddescr>
-			<fieldname>min_disk_space</fieldname>
-      <description>
-				<![CDATA[
-        Percentage of minimum disk space available before warning is mailed.<br/>
-        A value of 0 disables this feature.
-				]]>
-			</description>
-      <type>input</type>
-			<size>5</size>
-      <default_value>5</default_value>
-		</field>
-    <field>
-			<fielddescr>Mail Host Up-Down</fielddescr>
-			<fieldname>mail_host_updown</fieldname>
-      <description>
-				<![CDATA[
-        Enable sending mail when broctl cron notices the availability of a host in the cluster to have changed.<br/>
-        A value of 1 means send mail when a host status changes, and a value of 0 means do not send mail.
-				]]>
-			</description>
-      <type>input</type>
-			<size>5</size>
-      <default_value>1</default_value>
-		</field>
-    <field>
-			<name>Logging Options</name>
-			<type>listtopic</type>
-		</field>
-    <field>
-			<fielddescr>Log Rotation Interval</fielddescr>
-			<fieldname>log_rotate</fieldname>
-			<description>
-        <![CDATA[The frequency of log rotation in seconds for the manager/standalone node (zero to disable rotation).<br/>
-        A value of 0 disables log rotation.
-    	   ]]>
-    </description>
-			<type>input</type>
-			<size>5</size>
-      <default_value>3600</default_value>
-		</field>
-		<field>
-			<fielddescr>Log Expire Interval</fielddescr>
-			<fieldname>log_expiration</fieldname>
-      <description>
-				<![CDATA[
-        Number of days log files are kept (zero means log files never expire).
-				]]>
-			</description>
-      <type>input</type>
-			<size>5</size>
-      <default_value>0</default_value>
-		</field>
-    <field>
-			<fielddescr>Enable Statistics Logging</fielddescr>
-			<fieldname>stats_log</fieldname>
 			<description>
 				<![CDATA[
-        Enable BroControl to write statistics to the stats.log file.<br/>
-        A value of 1 means write to stats.log, and a value of 0 means do not write to stats.log.
+				Mail connection summary reports each log rotation interval.
+				A value of 1 means mail connection summaries, and a value of 0 means do not mail connection summaries.
 				]]>
 			</description>
 			<type>input</type>
 			<size>5</size>
 			<default_value>1</default_value>
 		</field>
-    <field>
+		<field>
+			<fielddescr>Minimum Disk space</fielddescr>
+			<fieldname>min_disk_space</fieldname>
+			<description>
+				<![CDATA[
+				Percentage of minimum disk space available before warning is mailed.<br/>
+				A value of 0 disables this feature.
+				]]>
+			</description>
+			<type>input</type>
+			<size>5</size>
+			<default_value>5</default_value>
+		</field>
+		<field>
+			<fielddescr>Mail Host Up-Down</fielddescr>
+			<fieldname>mail_host_updown</fieldname>
+			<description>
+				<![CDATA[
+				Enable sending mail when broctl cron notices the availability of a host in the cluster to have changed.<br/>
+				A value of 1 means send mail when a host status changes, and a value of 0 means do not send mail.
+				]]>
+			</description>
+			<type>input</type>
+			<size>5</size>
+			<default_value>1</default_value>
+		</field>
+		<field>
+			<name>Logging Options</name>
+			<type>listtopic</type>
+		</field>
+		<field>
+			<fielddescr>Log Rotation Interval</fielddescr>
+			<fieldname>log_rotate</fieldname>
+			<description>
+				<![CDATA[The frequency of log rotation in seconds for the manager/standalone node (zero to disable rotation).<br/>
+				A value of 0 disables log rotation.
+				]]>
+			</description>
+			<type>input</type>
+			<size>5</size>
+			<default_value>3600</default_value>
+		</field>
+		<field>
+			<fielddescr>Log Expire Interval</fielddescr>
+			<fieldname>log_expiration</fieldname>
+			<description>
+				<![CDATA[
+				Number of days log files are kept (zero means log files never expire).
+				]]>
+			</description>
+			<type>input</type>
+			<size>5</size>
+			<default_value>0</default_value>
+		</field>
+		<field>
+			<fielddescr>Enable Statistics Logging</fielddescr>
+			<fieldname>stats_log</fieldname>
+			<description>
+				<![CDATA[
+				Enable BroControl to write statistics to the stats.log file.<br/>
+				A value of 1 means write to stats.log, and a value of 0 means do not write to stats.log.
+				]]>
+			</description>
+			<type>input</type>
+			<size>5</size>
+			<default_value>1</default_value>
+		</field>
+		<field>
 			<fielddescr>Stats Log Expire Interval</fielddescr>
 			<fieldname>stats_duration</fieldname>
 			<description>
 				<![CDATA[
-        Number of days that entries in the stats.log file are kept.<br/>
-        A value of 0 means that entries never expire.
+				Number of days that entries in the stats.log file are kept.<br/>
+				A value of 0 means that entries never expire.
 				]]>
 			</description>
 			<type>input</type>
@@ -182,7 +182,7 @@
 			<default_value>0</default_value>
 		</field>
 
-    <field>
+		<field>
 			<name>Other Options</name>
 			<type>listtopic</type>
 		</field>
@@ -191,7 +191,7 @@
 			<fieldname>log_dir</fieldname>
 			<description>
 				<![CDATA[
-        Location of the log directory where log files will be archived each rotation interval<br/>
+				Location of the log directory where log files will be archived each rotation interval<br/>
 				Default: /usr/local/logs<br/>
 				]]>
 			</description>
