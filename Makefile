@@ -3,14 +3,14 @@
 PORTNAME=	pfSense-pkg-bro
 PORTVERSION=	2.5.2
 CATEGORIES=	security
-MASTER_SITES=	# empty
-DISTFILES=	# empty
-EXTRACT_ONLY=	# empty
+MASTER_SITES=	#	empty
+DISTFILES=	#	empty
+EXTRACT_ONLY=	#	empty
 
 MAINTAINER=	coreteam@pfsense.org
 COMMENT=	pfSense package bro
 
-LICENSE=	 BSD3CLAUSE
+LICENSE=	BSD3CLAUSE
 
 RUN_DEPENDS=	${LOCALBASE}/bin/bro:security/bro
 
