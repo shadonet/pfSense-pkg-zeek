@@ -1,32 +1,23 @@
 <?php
 /*
-bro.inc
-part of pfSense (https://www.pfSense.org/)
-Copyright (C) 2009 Prosper Doko
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice,
-this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
-OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
+*bro.inc
+*part of pfSense (https://www.pfSense.org/)
+*Copyright (c) 2018 Prosper Doko
+* All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
 */
+
 require_once('config.inc');
 require_once('globals.inc');
 require_once('notices.inc');
@@ -37,7 +28,6 @@ require_once('service-utils.inc');
 require_once("functions.inc");
 require_once('util.inc');
 require_once("interfaces.inc");
-require_once('xmlrpc.inc');
 require_once('xmlrpc_client.inc');
 
 if (!function_exists("filter_configure")) {
@@ -154,21 +144,21 @@ function bro_restart_services() {
 	 $rcfile = array();
 	 $rcfile['file'] = 'bro.sh';
 	 $rcfile['start'] = <<< EOD
-	 {$bro_etc_dir}/rc.d/bro start
+{$bro_etc_dir}/rc.d/bro start
 
 EOD;
+
 	 $rcfile['stop'] = <<< EOD
-	 {$bro_etc_dir}/rc.d/bro stop
-	 # Just to be sure...
-	 sleep 5
-	 if [ -n "`/bin/ps auxw | /usr/bin/grep "bro" | /usr/bin/awk '{print $2}'`" ]; then
-	 /usr/bin/killall -9 bro 2>/dev/null
-	 fi
+{$bro_etc_dir}/rc.d/bro stop
+# Just to be sure...
+sleep 5
+if [ -n "`/bin/ps auxw | /usr/bin/grep "bro" | /usr/bin/awk '{print $2}'`" ]; then
+/usr/bin/killall -9 bro 2>/dev/null
+fi
 EOD;
 
-	 conf_mount_rw();
 	 write_rcfile($rcfile);
-	 conf_mount_ro();
+
  }
 
  /*
@@ -176,11 +166,10 @@ EOD;
  */
 
  function bro_install_command() {
-	 // Put your own code to execute on package reconfiguration here
 	 global $g, $config;
 
-	 /* Hard kill any running bro processes that may have been started by any   */
-	 //of the pfSense scripts such as check_reload_status() or rc.start_packages
+	 /* Hard kill any running bro processes that may have been started by any
+	 of the pfSense scripts such as check_reload_status() or rc.start_packages*/
 	 if(is_process_running("bro")) {
 		 exec("/usr/bin/killall -z bro");
 		 sleep(2);
@@ -220,7 +209,6 @@ EOD;
 
 
  function bro_deinstall_command() {
-	 // Put your own code to execute on package reconfiguration here
 	 bro_install_cron(false);
 	 mwexec("/bin/ps awux | /usr/bin/egrep -i 'bro -f|\(bro\)' | /usr/bin/awk '{ print $2 }' | /usr/bin/xargs kill");
 	 unlink_if_exists("/usr/local/etc/rc.d/bro.sh");
@@ -289,7 +277,6 @@ EOD;
 		 }
 	 }
 	 unset($local_networks);
-
  }
 
  function bro_validate_broctl($post, &$input_errors) {
@@ -334,7 +321,6 @@ EOD;
 		 $input_errors[] = "You must enter a valid number of days in the 'Log rotate' field.";
 	 }
 	 unset($log_rotate);
-
  }
 
  function bro_validate_cluster($post, &$input_errors) {
@@ -380,7 +366,6 @@ EOD;
 	 if (!bro_enabled()) {
 		 $input_errors[] = 'You must enabled Bro instance first';
 	 }else {
-
 		 if (substr($post['broscriptpath'], -1, 1) == '/') {
 			 $input_errors[] = 'Script location must not end with a / character.';
 		 }
@@ -418,79 +403,77 @@ EOD;
 
 	 $iface = get_real_interface($ifaces);
 	 if ($iface) {
-
 		 $conf = '';
 		 $conf .= <<< EOD
-		 # Example BroControl node configuration.
-		 #
-		 # This example has a standalone node ready to go except for possibly changing
-		 # the sniffing interface.
+# Example BroControl node configuration.
+#
+# This example has a standalone node ready to go except for possibly changing
+# the sniffing interface.
 
-		 # This is a complete standalone configuration.  Most likely you will
-		 # only need to change the interface.
-		 [bro]
-		 type=standalone
-		 host=$hostname
-		 interface=$iface
+# This is a complete standalone configuration.  Most likely you will
+# only need to change the interface.
+[bro]
+type=standalone
+host=$hostname
+interface=$iface
 
-		 ## Below is an example clustered configuration. If you use this,
-		 ## remove the [bro] node above.
+## Below is an example clustered configuration. If you use this,
+## remove the [bro] node above.
 
-		 #[logger]
-		 #type=logger
-		 #host=localhost
-		 #
-		 #[manager]
-		 #type=manager
-		 #host=localhost
-		 #
-		 #[proxy-1]
-		 #type=proxy
-		 #host=localhost
-		 #
-		 #[worker-1]
-		 #type=worker
-		 #host=localhost
-		 #interface=eth0
-		 #
-		 #[worker-2]
-		 #type=worker
-		 #host=localhost
-		 #interface=eth0
+#[logger]
+#type=logger
+#host=localhost
+#
+#[manager]
+#type=manager
+#host=localhost
+#
+#[proxy-1]
+#type=proxy
+#host=localhost
+#
+#[worker-1]
+#type=worker
+#host=localhost
+#interface=eth0
+#
+#[worker-2]
+#type=worker
+#host=localhost
+#interface=eth0
 
 EOD;
 
-$nodefile =  BRO_ETC . '/node.cfg';
-conf_mount_rw();
-file_put_contents($nodefile, $conf);
-chmod($nodefile, 0640);
-conf_mount_ro();
+		$nodefile =  BRO_ETC . '/node.cfg';
+
+		file_put_contents($nodefile, $conf);
+		chmod($nodefile, 0640);
+
 }
 
-$conf = '';
-$conf .= <<< EOD
+	$conf = '';
+	$conf .= <<< EOD
 # List of local networks in CIDR notation, optionally followed by a
 # descriptive tag.
 # For example, "10.0.0.0/8" or "fe80::/64" are valid prefixes.
 
 EOD;
 
-$local_networks = preg_replace("/\s+/","\n", bro_text_area_decode($settings['local_networks']));
-if (!empty($local_networks)) {
-	$conf .= "\n$local_networks";
-}
-$networksfile =  BRO_ETC . '/networks.cfg';
-conf_mount_rw();
-file_put_contents($networksfile, $conf);
-chmod($networksfile, 0640);
-conf_mount_ro();
-bro_sync_on_changes();
-bro_restart_services();
-bro_install_cron(true);
+	$local_networks = preg_replace("/\s+/","\n", bro_text_area_decode($settings['local_networks']));
+	if (!empty($local_networks)) {
+		$conf .= "\n$local_networks";
+	}
+	$networksfile =  BRO_ETC . '/networks.cfg';
+
+	file_put_contents($networksfile, $conf);
+	chmod($networksfile, 0640);
+
+	bro_sync_on_changes();
+	bro_restart_services();
+	bro_install_cron(true);
 }
 
 function 	bro_broctl_resync() {
-	// Put your own code to execute on package reconfiguration here
 	global $config;
 
 	if (is_array($config['installedpackages']['brocontrol'])) {
@@ -515,86 +498,86 @@ function 	bro_broctl_resync() {
 
 	$conf = '';
 	$conf .= <<< EOD
-	## Global BroControl configuration file.
+## Global BroControl configuration file.
 
-	###############################################
-	# Mail Options
+###############################################
+# Mail Options
 
-	# Recipient address for all emails sent out by Bro and BroControl.
-	MailTo = $email
+# Recipient address for all emails sent out by Bro and BroControl.
+MailTo = $email
 
-	# Mail connection summary reports each log rotation interval.  A value of 1
-	# means mail connection summaries, and a value of 0 means do not mail
-	# connection summaries.  This option has no effect if the trace-summary
-	# script is not available.
-	MailConnectionSummary = $mailconnection
+# Mail connection summary reports each log rotation interval.  A value of 1
+# means mail connection summaries, and a value of 0 means do not mail
+# connection summaries.  This option has no effect if the trace-summary
+# script is not available.
+MailConnectionSummary = $mailconnection
 
-	# Lower threshold (in percentage of disk space) for space available on the
-	# disk that holds SpoolDir. If less space is available, "broctl cron" starts
-	# sending out warning emails.  A value of 0 disables this feature.
-	MinDiskSpace = $diskspace
+# Lower threshold (in percentage of disk space) for space available on the
+# disk that holds SpoolDir. If less space is available, "broctl cron" starts
+# sending out warning emails.  A value of 0 disables this feature.
+MinDiskSpace = $diskspace
 
-	# Send mail when "broctl cron" notices the availability of a host in the
-	# cluster to have changed.  A value of 1 means send mail when a host status
-	# changes, and a value of 0 means do not send mail.
-	MailHostUpDown = $mailhostupdown
+# Send mail when "broctl cron" notices the availability of a host in the
+# cluster to have changed.  A value of 1 means send mail when a host status
+# changes, and a value of 0 means do not send mail.
+MailHostUpDown = $mailhostupdown
 
-	###############################################
-	# Logging Options
+###############################################
+# Logging Options
 
-	# Rotation interval in seconds for log files on manager (or standalone) node.
-	# A value of 0 disables log rotation.
-	LogRotationInterval = $rotate
+# Rotation interval in seconds for log files on manager (or standalone) node.
+# A value of 0 disables log rotation.
+LogRotationInterval = $rotate
 
-	# Expiration interval for archived log files in LogDir.  Files older than this
-	# will be deleted by "broctl cron".  The interval is an integer followed by
-	# one of these time units:  day, hr, min.  A value of 0 means that logs
-	# never expire.
-	LogExpireInterval = $logexpiration
+# Expiration interval for archived log files in LogDir.  Files older than this
+# will be deleted by "broctl cron".  The interval is an integer followed by
+# one of these time units:  day, hr, min.  A value of 0 means that logs
+# never expire.
+LogExpireInterval = $logexpiration
 
-	# Enable BroControl to write statistics to the stats.log file.  A value of 1
-	# means write to stats.log, and a value of 0 means do not write to stats.log.
-	StatsLogEnable = $statslog
+# Enable BroControl to write statistics to the stats.log file.  A value of 1
+# means write to stats.log, and a value of 0 means do not write to stats.log.
+StatsLogEnable = $statslog
 
-	# Number of days that entries in the stats.log file are kept.  Entries older
-	# than this many days will be removed upon running "broctl cron".  A value of 0
-	# means that entries never expire.
-	StatsLogExpireInterval = $statsduration
+# Number of days that entries in the stats.log file are kept.  Entries older
+# than this many days will be removed upon running "broctl cron".  A value of 0
+# means that entries never expire.
+StatsLogExpireInterval = $statsduration
 
-	###############################################
-	# Other Options
+###############################################
+# Other Options
 
-	# Show all output of the broctl status command.  If set to 1, then all output
-	# is shown.  If set to 0, then broctl status will not collect or show the peer
-	# information (and the command will run faster).
-	StatusCmdShowAll = 0
+# Show all output of the broctl status command.  If set to 1, then all output
+# is shown.  If set to 0, then broctl status will not collect or show the peer
+# information (and the command will run faster).
+StatusCmdShowAll = 0
 
-	# Site-specific policy script to load. Bro will look for this in
-	# $PREFIX/share/bro/site. A default local.bro comes preinstalled
-	# and can be customized as desired.
-	SitePolicyStandalone = local.bro
+# Site-specific policy script to load. Bro will look for this in
+# $PREFIX/share/bro/site. A default local.bro comes preinstalled
+# and can be customized as desired.
+SitePolicyStandalone = local.bro
 
-	# Location of the log directory where log files will be archived each rotation
-	# interval.
-	LogDir = $logdir
+# Location of the log directory where log files will be archived each rotation
+# interval.
+LogDir = $logdir
 
-	# Location of the spool directory where files and data that are currently being
-	# written are stored.
-	SpoolDir = /usr/local/spool
+# Location of the spool directory where files and data that are currently being
+# written are stored.
+SpoolDir = /usr/local/spool
 
-	# Location of other configuration files that can be used to customize
-	# BroControl operation (e.g. local networks, nodes).
-	CfgDir = /usr/local/etc
+# Location of other configuration files that can be used to customize
+# BroControl operation (e.g. local networks, nodes).
+CfgDir = /usr/local/etc
 
 EOD;
 
-$brocontrolfile =  BRO_ETC . '/broctl.cfg';
-conf_mount_rw();
-file_put_contents($brocontrolfile, $conf);
-chmod($brocontrolfile, 0640);
-conf_mount_ro();
-bro_sync_on_changes();
-bro_restart_services();
+	$brocontrolfile =  BRO_ETC . '/broctl.cfg';
+
+	file_put_contents($brocontrolfile, $conf);
+	chmod($brocontrolfile, 0640);
+
+	bro_sync_on_changes();
+	bro_restart_services();
 }
 
 function 	bro_cluster_resync() {
@@ -626,56 +609,55 @@ function 	bro_cluster_resync() {
 	$iface2 = get_real_interface($worker2iface);
 
 	if ($iface1 && $iface2) {
-
 		$conf = '';
 		$conf .= <<< EOD
-		# Example BroControl node configuration.
-		#
-		# This example has a standalone node ready to go except for possibly changing
-		# the sniffing interface.
+# Example BroControl node configuration.
+#
+# This example has a standalone node ready to go except for possibly changing
+# the sniffing interface.
 
-		# This is a complete standalone configuration.  Most likely you will
-		# only need to change the interface.
-		#[bro]
-		#type=standalone
-		#host=localhost
-		#interface=eth0
+# This is a complete standalone configuration.  Most likely you will
+# only need to change the interface.
+#[bro]
+#type=standalone
+#host=localhost
+#interface=eth0
 
-		## Below is an example clustered configuration. If you use this,
-		## remove the [bro] node above.
+## Below is an example clustered configuration. If you use this,
+## remove the [bro] node above.
 
-		#[logger]
-		#type=logger
-		#host=localhost
-		#
-		[manager]
-		type=manager
-		host=$managerhost
-		#
-		[proxy-1]
-		type=proxy
-		host=$proxyhost
-		#
-		[worker-1]
-		type=worker
-		host=$worker1host
-		interface=$iface1
-		#
-		[worker-2]
-		type=worker
-		host=$worker2host
-		interface=$iface2
+#[logger]
+#type=logger
+#host=localhost
+#
+[manager]
+type=manager
+host=$managerhost
+#
+[proxy-1]
+type=proxy
+host=$proxyhost
+#
+[worker-1]
+type=worker
+host=$worker1host
+interface=$iface1
+#
+[worker-2]
+type=worker
+host=$worker2host
+interface=$iface2
 
 EOD;
 
-$nodefile =  BRO_ETC . '/node.cfg';
-conf_mount_rw();
-file_put_contents($nodefile, $conf);
-chmod($nodefile, 0640);
-conf_mount_ro();
+		$nodefile =  BRO_ETC . '/node.cfg';
+
+		file_put_contents($nodefile, $conf);
+		chmod($nodefile, 0640);
+
 }
-bro_sync_on_changes();
-bro_restart_services();
+	bro_sync_on_changes();
+	bro_restart_services();
 }
 
 function 	bro_log_resync() {
@@ -696,131 +678,132 @@ function 	bro_script_resync() {
 
 	$conf = '';
 	$conf .= <<<EOD
-	##! Local site policy. Customize as appropriate.
-	##!
-	##! This file will not be overwritten when upgrading or reinstalling!
+##! Local site policy. Customize as appropriate.
+##!
+##! This file will not be overwritten when upgrading or reinstalling!
 
-	# This script logs which scripts were loaded during each run.
-	@load misc/loaded-scripts
+# This script logs which scripts were loaded during each run.
+@load misc/loaded-scripts
 
-	# Apply the default tuning scripts for common tuning settings.
-	@load tuning/defaults
+# Apply the default tuning scripts for common tuning settings.
+@load tuning/defaults
 
-	# Load the scan detection script.
-	@load misc/scan
+# Load the scan detection script.
+@load misc/scan
 
-	# Log some information about web applications being used by users
-	# on your network.
-	@load misc/app-stats
+# Log some information about web applications being used by users
+# on your network.
+@load misc/app-stats
 
-	# Detect traceroute being run on the network.
-	@load misc/detect-traceroute
+# Detect traceroute being run on the network.
+@load misc/detect-traceroute
 
-	# Generate notices when vulnerable versions of software are discovered.
-	# The default is to only monitor software found in the address space defined
-	# as "local".  Refer to the software framework's documentation for more
-	# information.
-	@load frameworks/software/vulnerable
+# Generate notices when vulnerable versions of software are discovered.
+# The default is to only monitor software found in the address space defined
+# as "local".  Refer to the software framework's documentation for more
+# information.
+@load frameworks/software/vulnerable
 
-	# Detect software changing (e.g. attacker installing hacked SSHD).
-	@load frameworks/software/version-changes
+# Detect software changing (e.g. attacker installing hacked SSHD).
+@load frameworks/software/version-changes
 
-	# This adds signatures to detect cleartext forward and reverse windows shells.
-	@load-sigs frameworks/signatures/detect-windows-shells
+# This adds signatures to detect cleartext forward and reverse windows shells.
+@load-sigs frameworks/signatures/detect-windows-shells
 
-	# Load all of the scripts that detect software in various protocols.
-	@load protocols/ftp/software
-	@load protocols/smtp/software
-	@load protocols/ssh/software
-	@load protocols/http/software
-	# The detect-webapps script could possibly cause performance trouble when
-	# running on live traffic.  Enable it cautiously.
-	#@load protocols/http/detect-webapps
+# Load all of the scripts that detect software in various protocols.
+@load protocols/ftp/software
+@load protocols/smtp/software
+@load protocols/ssh/software
+@load protocols/http/software
+# The detect-webapps script could possibly cause performance trouble when
+# running on live traffic.  Enable it cautiously.
+#@load protocols/http/detect-webapps
 
-	# This script detects DNS results pointing toward your Site::local_nets
-	# where the name is not part of your local DNS zone and is being hosted
-	# externally.  Requires that the Site::local_zones variable is defined.
-	@load protocols/dns/detect-external-names
+# This script detects DNS results pointing toward your Site::local_nets
+# where the name is not part of your local DNS zone and is being hosted
+# externally.  Requires that the Site::local_zones variable is defined.
+@load protocols/dns/detect-external-names
 
-	# Script to detect various activity in FTP sessions.
-	@load protocols/ftp/detect
+# Script to detect various activity in FTP sessions.
+@load protocols/ftp/detect
 
-	# Scripts that do asset tracking.
-	@load protocols/conn/known-hosts
-	@load protocols/conn/known-services
-	@load protocols/ssl/known-certs
+# Scripts that do asset tracking.
+@load protocols/conn/known-hosts
+@load protocols/conn/known-services
+@load protocols/ssl/known-certs
 
-	# This script enables SSL/TLS certificate validation.
-	@load protocols/ssl/validate-certs
+# This script enables SSL/TLS certificate validation.
+@load protocols/ssl/validate-certs
 
-	# This script prevents the logging of SSL CA certificates in x509.log
-	@load protocols/ssl/log-hostcerts-only
+# This script prevents the logging of SSL CA certificates in x509.log
+@load protocols/ssl/log-hostcerts-only
 
-	# Uncomment the following line to check each SSL certificate hash against the ICSI
-	# certificate notary service; see http://notary.icsi.berkeley.edu .
-		# @load protocols/ssl/notary
+# Uncomment the following line to check each SSL certificate hash against the ICSI
+# certificate notary service; see http://notary.icsi.berkeley.edu .
+# @load protocols/ssl/notary
 
-		# If you have libGeoIP support built in, do some geographic detections and
-		# logging for SSH traffic.
-		@load protocols/ssh/geo-data
-		# Detect hosts doing SSH bruteforce attacks.
-		@load protocols/ssh/detect-bruteforcing
-		# Detect logins using "interesting" hostnames.
-		@load protocols/ssh/interesting-hostnames
+# If you have libGeoIP support built in, do some geographic detections and
+# logging for SSH traffic.
+@load protocols/ssh/geo-data
+# Detect hosts doing SSH bruteforce attacks.
+@load protocols/ssh/detect-bruteforcing
+# Detect logins using "interesting" hostnames.
+@load protocols/ssh/interesting-hostnames
 
-		# Detect SQL injection attacks.
-		@load protocols/http/detect-sqli
+# Detect SQL injection attacks.
+@load protocols/http/detect-sqli
 
-		#### Network File Handling ####
+#### Network File Handling ####
 
-		# Enable MD5 and SHA1 hashing for all files.
-		@load frameworks/files/hash-all-files
+# Enable MD5 and SHA1 hashing for all files.
+@load frameworks/files/hash-all-files
 
-		# Detect SHA1 sums in Team Cymru's Malware Hash Registry.
-		@load frameworks/files/detect-MHR
+# Detect SHA1 sums in Team Cymru's Malware Hash Registry.
+@load frameworks/files/detect-MHR
 
-		# Uncomment the following line to enable detection of the heartbleed attack. Enabling
-		# this might impact performance a bit.
-		# @load policy/protocols/ssl/heartbleed
+# Uncomment the following line to enable detection of the heartbleed attack. Enabling
+# this might impact performance a bit.
+# @load policy/protocols/ssl/heartbleed
 
 EOD;
 
-$scripts = $config['installedpackages']['broscript']['config'];
+	$scripts = $config['installedpackages']['broscript']['config'];
 
-if (bro_enabled()){
-	if (is_array($scripts) && !empty($scripts)) {
-		foreach ($scripts as $script) {
+	if (bro_enabled()){
+		if (is_array($scripts) && !empty($scripts)) {
+			foreach ($scripts as $script) {
 
-			$path = $script['broscriptpath'];
+				$path = $script['broscriptpath'];
 
-			$filename = '';
-			if ($script['broscriptpath'] == '') {
 				$filename = '';
-			}else {
-				$filename = "@load ".basename($path,".bro")."";
-			}
+				if ($script['broscriptpath'] == '') {
+					$filename = '';
+				}else {
+					$filename = "@load ".basename($path,".bro")."";
+				}
 
-			$test =  escapeshellarg($path);
-			$dest = escapeshellarg('/usr/local/share/bro/site');
-			exec("/bin/cp $test $dest");
-			$newline = "\n";
+				$test =  escapeshellarg($path);
+				$dest = escapeshellarg('/usr/local/share/bro/site');
+				exec("/bin/cp $test $dest");
+				$newline = "\n";
 
-			$conf .= <<<EOD
-			$filename
-			$newline
+				$conf .= <<<EOD
+$filename
+$newline
+
 EOD;
-}
+	}
 }
 
-$destpath = '/usr/local/share/bro/site/local.bro';
-conf_mount_rw();
-file_put_contents($destpath, $conf);
-chmod($destpath, 0640);
-conf_mount_ro();
+	$destpath = '/usr/local/share/bro/site/local.bro';
 
-}else {
-	log_error("You must enabled Bro instance first.");
-}
+	file_put_contents($destpath, $conf);
+	chmod($destpath, 0640);
+	
+
+	}else {
+		log_error("You must enabled Bro instance first.");
+	}
 bro_sync_on_changes();
 bro_restart_services();
 }
