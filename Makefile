@@ -1,18 +1,17 @@
 # $FreeBSD$
 
 PORTNAME=	pfSense-pkg-bro
-PORTVERSION=	2.5.2
+PORTVERSION=	0.1.0
 CATEGORIES=	security
 MASTER_SITES=	#	empty
 DISTFILES=	#	empty
-EXTRACT_ONLY=	#	empty
 
 MAINTAINER=	coreteam@pfsense.org
-COMMENT=	pfSense package bro
+COMMENT=	Bro Network Security Monitor package for pfSense
 
-LICENSE=	BSD3CLAUSE
+LICENSE=	APACHE20
 
-RUN_DEPENDS=	${LOCALBASE}/bin/bro:security/bro
+RUN_DEPENDS=	bro>=0:security/bro
 
 NO_BUILD=	yes
 NO_MTREE=	yes
@@ -23,9 +22,7 @@ SUB_LIST=	PORTNAME=${PORTNAME}
 do-extract:
 	${MKDIR} ${WRKSRC}
 
-	do-install:
-	${MKDIR} ${STAGEDIR}${PREFIX}/pkg
-	${MKDIR} ${STAGEDIR}${PREFIX}/www
+do-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/www/shortcuts
 	${MKDIR} ${STAGEDIR}/etc/inc/priv
 	${MKDIR} ${STAGEDIR}${DATADIR}
