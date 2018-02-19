@@ -2,7 +2,7 @@
 //list_by_ext: returns an array containing an alphabetic list of files in the specified directory ($path) with a file extension that matches $extension
 
 function list_by_ext($extension, $path){
-  $list = array(); //initialise a variable
+  $list = array();
   $dir_handle = @opendir($path) or die("Unable to open $path"); //attempt to open path
   while($file = readdir($dir_handle)){ //loop through all the files in the path
     if($file == "." || $file == ".."){continue;} //ignore these
