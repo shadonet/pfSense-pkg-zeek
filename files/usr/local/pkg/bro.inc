@@ -74,6 +74,7 @@ function bro_enabled() {
 	}
 	return $bro_enabled;
 }
+
 // Check whether Bro Cluster is enabled
 function bro_cluster_enabled() {
 	global $config, $bro_cluster_enabled;
@@ -158,7 +159,6 @@ fi
 EOD;
 
 	 write_rcfile($rcfile);
-
  }
 
  /*
@@ -365,7 +365,7 @@ EOD;
 	 //$settings = $config['installedpackages']['broscript']['config'];
 	 if (!bro_enabled()) {
 		 $input_errors[] = 'You must enabled Bro instance first';
-	 }else {
+	 } else {
 		 if (substr($post['broscriptpath'], -1, 1) == '/') {
 			 $input_errors[] = 'Script location must not end with a / character.';
 		 }
@@ -448,8 +448,7 @@ EOD;
 
 		file_put_contents($nodefile, $conf);
 		chmod($nodefile, 0640);
-
-}
+	}
 
 	$conf = '';
 	$conf .= <<< EOD
@@ -655,7 +654,7 @@ EOD;
 		file_put_contents($nodefile, $conf);
 		chmod($nodefile, 0640);
 
-}
+	}
 	bro_sync_on_changes();
 	bro_restart_services();
 }
@@ -792,20 +791,19 @@ $filename
 $newline
 
 EOD;
+		}
 	}
-}
 
 	$destpath = '/usr/local/share/bro/site/local.bro';
 
 	file_put_contents($destpath, $conf);
 	chmod($destpath, 0640);
-	
 
 	}else {
 		log_error("You must enabled Bro instance first.");
 	}
-bro_sync_on_changes();
-bro_restart_services();
+	bro_sync_on_changes();
+	bro_restart_services();
 }
 
 /*
