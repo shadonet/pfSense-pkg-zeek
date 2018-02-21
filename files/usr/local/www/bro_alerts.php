@@ -112,7 +112,7 @@ $( "#logfile" ).change(function() {
 });
 
 function updateSelect() {
-	var x = 'x='+document.getElementById("logfile").length;
+	var x = 'x='+$('#logfile').length;
 	jQuery.ajax({
 		type: "POST",
 		url: "select_box_file.php",
