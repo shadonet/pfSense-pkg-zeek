@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	pfSense-pkg-bro
-PORTVERSION=	0.1.0
+PORTVERSION=	2.5.2
 CATEGORIES=	security
 MASTER_SITES=	#	empty
 DISTFILES=	#	empty
@@ -23,6 +23,7 @@ do-extract:
 	${MKDIR} ${WRKSRC}
 
 do-install:
+	${MKDIR} ${STAGEDIR}${PREFIX}/pkg
 	${MKDIR} ${STAGEDIR}${PREFIX}/www/shortcuts
 	${MKDIR} ${STAGEDIR}/etc/inc/priv
 	${MKDIR} ${STAGEDIR}${DATADIR}
@@ -55,4 +56,4 @@ do-install:
 	@${REINPLACE_CMD} -i '' -e "s|%%PKGVERSION%%|${PKGVERSION}|" \
 	${STAGEDIR}${DATADIR}/info.xml
 
-	.include <bsd.port.mk>
+.include <bsd.port.mk>
