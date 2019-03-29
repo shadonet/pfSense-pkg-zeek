@@ -3,8 +3,8 @@
 Bro Network Security Monitor package for pfSense router/firewall
 
 <br>
-![Demo](https://monosnap.com/image/f4U3oW2bBUeTsdP6wQa7qDHHXi1YU1)
 
+![Demo](demo/bro-pfSense.gif)
 
 # Compatibility
 This package has been tested on **pfSense 2.4.4-RELEASE-p2 (amd64)**. Maybe it might not work with older versions of pfSense.
