@@ -12,7 +12,7 @@ This package has been tested on **pfSense 2.4.4-RELEASE-p2 (amd64)**. Maybe it m
 
 # Installation
 
-## Download the generated package through [pfSense-pkg-bro](https://github.com/shadonet/pfSense-pkg-bro/raw/master/pfSense-pkg-bro-0.1.0.txz)
+## Download the generated package through [pfSense-pkg-bro](https://github.com/shadonet/pfSense-pkg-bro/raw/master/data/pfSense-pkg-bro-0.1.0.txz)
 
 ## Copy the package from your local machine to your firewall
 You’ll need to enable ssh access to your pfSense firewall as it’s not enabled by default. To do this, login to pfsense and browse to **System > Advanced**, then scroll down to the SSH section and check **‘Enable Secure Shell’**.
