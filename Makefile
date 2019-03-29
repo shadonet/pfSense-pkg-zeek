@@ -1,10 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	pfSense-pkg-bro
-PORTVERSION=	2.5.2
+PORTVERSION=	0.1.0
 CATEGORIES=	security
-MASTER_SITES=	#	empty
-DISTFILES=	#	empty
+MASTER_SITES=	# none
+DISTFILES=	# none
 
 MAINTAINER=	coreteam@pfsense.org
 COMMENT=	Bro Network Security Monitor package for pfSense
