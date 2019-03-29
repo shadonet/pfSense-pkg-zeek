@@ -2,27 +2,49 @@
 
 Bro Network Security Monitor package for pfSense router/firewall
 
-<br><br>
-![Example](https://user-images.githubusercontent.com/20781471/29499167-c581b802-8602-11e7-89dd-db6be4afc797.gif?raw=true)
+<br>
+![Demo](https://monosnap.com/image/f4U3oW2bBUeTsdP6wQa7qDHHXi1YU1)
 
 
 # Compatibility
-This package has been tested on PfSense 2.3.2 amd64. Maybe it might not work with older versions of pfSense.
+This package has been tested on **pfSense 2.4.4-RELEASE-p2 (amd64)**. Maybe it might not work with older versions of pfSense.
 <br><br>
 
 # Installation
 
-## Download the generated package through [pfSense-pkg-bro](https://github.com/shadonet/pfSense-pkg-bro/files/1248279/pfSense-pkg-bro-2.4.1.zip)
+## Download the generated package through [pfSense-pkg-bro](https://github.com/shadonet/pfSense-pkg-bro/raw/master/pfSense-pkg-bro-0.1.0.txz)
 
 ## Copy the package from your local machine to your firewall
+You’ll need to enable ssh access to your pfSense firewall as it’s not enabled by default. To do this, login to pfsense and browse to **System > Advanced**, then scroll down to the SSH section and check **‘Enable Secure Shell’**.
+<br>
+By default, pfSense disables upstream pkg repositories (for good reason). So we need to re-enable them albeit, temporarily. There are two files you’ll need to edit.
 
 ```shell
-scp ~/Downloads/pfSense-pkg-bro-2.4.1.txz root@firewall-ip-address:/tmp/
+/usr/local/etc/pkg/repos/FreeBSD.conf
+/usr/local/share/pfSense/pkg/repos/pfSense-repo.conf
+```
+Make it look like:
+
+```shell
+FreeBSD: { enabled: yes }
+```
+As this package depends on bro, we need to update the pkg cache and get on with installing bro.
+
+```shell
+pkg update && pkg install -y bro
+```
+
+Finally, copy the package to your firewall temporary folder.
+
+```shell
+scp ~/Downloads/pfSense-pkg-bro-0.1.0.txz root@firewall-ip-address:/tmp/
 ```
 ## Install the package on the firewall via pkg add command
 ```shell
-pkg add pfSense-pkg-bro-2.4.1.txz
+pkg add pfSense-pkg-bro-0.1.0.txz
 ```
+Now, you can access the interface by login to pfSense and browse to **Services > Bro NSM**
+
 ## Contribution
 - **Having an issue**? or looking for support? [Open an issue](https://github.com/shadonet/pfSense-pkg-bro/issues/new) and we will get you the help you need.
 - Got a **new feature or a bug fix**? Fork the repo, make your changes, and submit a pull request.
@@ -32,7 +54,7 @@ If you find this project useful, please star the repo to let people know that it
 
 # License (Apache 2.0)
 
- Copyright (c) 2018 Prosper Doko
+ Copyright (c) 2019 Prosper Doko
  All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
