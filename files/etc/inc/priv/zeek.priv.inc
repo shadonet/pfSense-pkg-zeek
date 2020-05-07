@@ -1,6 +1,6 @@
 <?php
 /*
-	* bro.priv.inc
+	* zeek.priv.inc
   * part of pfSense (https://www.pfSense.org/)
   * Copyright (c) 2018 Prosper Doko
   * All rights reserved.
@@ -19,23 +19,23 @@
 */
 global $priv_list;
 
-$priv_list['page-services-bro'] = array();
-$priv_list['page-services-bro']['name'] = "WebCfg - Services: bro package";
-$priv_list['page-services-bro']['descr'] = "Allow access to bro package GUI";
+$priv_list['page-services-zeek'] = array();
+$priv_list['page-services-zeek']['name'] = "WebCfg - Services: zeek package";
+$priv_list['page-services-zeek']['descr'] = "Allow access to zeek package GUI";
 
-$priv_list['page-services-bro']['match'] = array();
-$priv_list['page-services-bro']['match'][] = "pkg_edit.php?xml=bro_script.xml*";
+$priv_list['page-services-zeek']['match'] = array();
+$priv_list['page-services-zeek']['match'][] = "pkg_edit.php?xml=zeek_script.xml*";
 
-$priv_list['page-services-bro']['match'][] = "pkg_edit.php?xml=bro.xml*";
-$priv_list['page-services-bro']['match'][] = "pkg_edit.php?xml=bro_broctl.xml*";
-$priv_list['page-services-bro']['match'][] = "pkg_edit.php?xml=bro_cluster.xml*";
-$priv_list['page-services-bro']['match'][] = "pkg_edit.php?xml=bro_script.xml*";
-$priv_list['page-services-bro']['match'][] = "pkg_edit.php?xml=bro_log.xml*";
-$priv_list['page-services-bro']['match'][] = "pkg_edit.php?xml=bro_sync.xml*";
+$priv_list['page-services-zeek']['match'][] = "pkg_edit.php?xml=zeek.xml*";
+$priv_list['page-services-zeek']['match'][] = "pkg_edit.php?xml=zeek_zeekctl.xml*";
+$priv_list['page-services-zeek']['match'][] = "pkg_edit.php?xml=zeek_cluster.xml*";
+$priv_list['page-services-zeek']['match'][] = "pkg_edit.php?xml=zeek_script.xml*";
+$priv_list['page-services-zeek']['match'][] = "pkg_edit.php?xml=zeek_log.xml*";
+$priv_list['page-services-zeek']['match'][] = "pkg_edit.php?xml=zeek_sync.xml*";
 
-$priv_list['page-services-bro']['match'][] = "shortcuts/pkg_bro.inc*";
-$priv_list['page-services-bro']['match'][] = "bro_alerts.php*";
-$priv_list['page-services-bro']['match'][] = "bro_alert_data.php*";
-$priv_list['page-services-bro']['match'][] = "select_box_file.php*";
+$priv_list['page-services-zeek']['match'][] = "shortcuts/pkg_zeek.inc*";
+$priv_list['page-services-zeek']['match'][] = "zeek_alerts.php*";
+$priv_list['page-services-zeek']['match'][] = "zeek_alert_data.php*";
+$priv_list['page-services-zeek']['match'][] = "select_box_file.php*";
 
 ?>

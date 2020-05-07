@@ -7,7 +7,7 @@
 		/* $Id$ */
 		/* ====================================================================================== */
 		/*
-		* bro_log.xml
+		* zeek_log.xml
 		* part of pfSense (https://www.pfSense.org/)
 		* Copyright (c) 2018 Prosper Doko
 		* All rights reserved.
@@ -27,38 +27,38 @@
 		/* ====================================================================================== */
 		]]>
 	</copyright>
-	<name>brolog</name>
-	<title>Bro NSM: Log Mgmt</title>
-	<include_file>/usr/local/pkg/bro.inc</include_file>
+	<name>zeeklog</name>
+	<title>Zeek NSM: Log Mgmt</title>
+	<include_file>/usr/local/pkg/zeek.inc</include_file>
 	<tabs>
 		<tab>
 			<text>General</text>
-			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>BroControl Config</text>
-			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
+			<text>ZeekControl Config</text>
+			<url>/pkg_edit.php?xml=zeek_zeekctl.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>Bro Cluster</text>
-			<url>/pkg_edit.php?xml=bro_cluster.xml&amp;id=0</url>
+			<text>Zeek Cluster</text>
+			<url>/pkg_edit.php?xml=zeek_cluster.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>Bro Scripts</text>
-			<url>/pkg.php?xml=bro_script.xml</url>
+			<text>Zeek Scripts</text>
+			<url>/pkg.php?xml=zeek_script.xml</url>
 		</tab>
 		<tab>
 			<text>Log Mgmt</text>
-			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek_log.xml&amp;id=0</url>
 			<active/>
 		</tab>
 		<tab>
 			<text>Real Time Inspection</text>
-			<url>/bro_alerts.php</url>
+			<url>/zeek_alerts.php</url>
 		</tab>
 		<tab>
 			<text>XMLRPC Sync</text>
-			<url>/pkg_edit.php?xml=bro_sync.xml</url>
+			<url>/pkg_edit.php?xml=zeek_sync.xml</url>
 		</tab>
 	</tabs>
 	<fields>
@@ -67,13 +67,13 @@
 			<type>listtopic</type>
 		</field>
 		<field>
-			<fielddescr>Remove Bro Logs on Package Uninstall</fielddescr>
-			<fieldname>remove_bro_log</fieldname>
-			<description>Bro log file will be removed when bro package is uninstall.</description>
+			<fielddescr>Remove Zeek Logs on Package Uninstall</fielddescr>
+			<fieldname>remove_zeek_log</fieldname>
+			<description>Zeek log file will be removed when zeek package is uninstalled.</description>
 			<type>checkbox</type>
 		</field>
 	</fields>
 	<custom_php_resync_config_command>
-		bro_log_resync();
+		zeek_log_resync();
 	</custom_php_resync_config_command>
 </packagegui>

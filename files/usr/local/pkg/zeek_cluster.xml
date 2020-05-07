@@ -7,7 +7,7 @@
 		/* $Id$ */
 		/* ====================================================================================== */
 		/*
-		* bro_cluster.xml
+		* zeek_cluster.xml
 		* part of pfSense (https://www.pfSense.org/)
 		* Copyright (c) 2018 Prosper Doko
 		* All rights reserved.
@@ -27,38 +27,38 @@
 		/* ====================================================================================== */
 		]]>
 	</copyright>
-	<name>brocluster</name>
-	<title>Bro NSM: Bro Clustering</title>
-	<include_file>/usr/local/pkg/bro.inc</include_file>
+	<name>zeekcluster</name>
+	<title>Zeek NSM: Zeek Clustering</title>
+	<include_file>/usr/local/pkg/zeek.inc</include_file>
 	<tabs>
 		<tab>
 			<text>General</text>
-			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>BroControl Config</text>
-			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
+			<text>ZeekControl Config</text>
+			<url>/pkg_edit.php?xml=zeek_zeekctl.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>Bro Cluster</text>
-			<url>/pkg_edit.php?xml=bro_cluster.xml&amp;id=0</url>
+			<text>Zeek Cluster</text>
+			<url>/pkg_edit.php?xml=zeek_cluster.xml&amp;id=0</url>
 			<active/>
 		</tab>
 		<tab>
-			<text>Bro Scripts</text>
-			<url>/pkg.php?xml=bro_script.xml</url>
+			<text>Zeek Scripts</text>
+			<url>/pkg.php?xml=zeek_script.xml</url>
 		</tab>
 		<tab>
 			<text>Log Mgmt</text>
-			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek_log.xml&amp;id=0</url>
 		</tab>
 		<tab>
 			<text>Real Time Inspection</text>
-			<url>/bro_alerts.php</url>
+			<url>/zeek_alerts.php</url>
 		</tab>
 		<tab>
 			<text>XMLRPC Sync</text>
-			<url>/pkg_edit.php?xml=bro_sync.xml</url>
+			<url>/pkg_edit.php?xml=zeek_sync.xml</url>
 		</tab>
 	</tabs>
 	<fields>
@@ -67,12 +67,12 @@
 			<type>listtopic</type>
 		</field>
 		<field>
-			<fielddescr>Enable Bro Cluster</fielddescr>
+			<fielddescr>Enable Zeek Cluster</fielddescr>
 			<fieldname>enable_cluster</fieldname>
 			<description>Check to enable the cluster mode.</description>
 			<sethelp>
 				<![CDATA[
-				<strong><span class="errmsg">Note:</span> If enabled, Bro stand-alone mode will be disabled.</strong>
+				<strong><span class="errmsg">Note:</span> If enabled, Zeek stand-alone mode will be disabled.</strong>
 				]]>
 			</sethelp>
 			<type>checkbox</type>
@@ -126,13 +126,13 @@
 	</fields>
 	<custom_php_validation_command>
 		<![CDATA[
-		if (!empty($_POST) && bro_enabled()) {
-		log_error("Bro standalone mode is enable. You must disable Bro standalone mode under Services - Bro NSM - General Settings.");
+		if (!empty($_POST) && zeek_enabled()) {
+		log_error("Zeek standalone mode is enable. You must disable Zeek standalone mode under Services - Zeek NSM - General Settings.");
 		}
-		bro_validate_cluster($_POST, $input_errors);
+		zeek_validate_cluster($_POST, $input_errors);
 		]]>
 	</custom_php_validation_command>
 	<custom_php_resync_config_command>
-		bro_cluster_resync();
+		zeek_cluster_resync();
 	</custom_php_resync_config_command>
 </packagegui>

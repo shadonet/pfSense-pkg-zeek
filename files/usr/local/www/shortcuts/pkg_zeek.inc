@@ -2,10 +2,10 @@
 
 global $shortcuts;
 
-$shortcuts['bro'] = array();
-$shortcuts['bro']['main'] = "pkg_edit.php?xml=bro.xml";
-$shortcuts['bro']['log'] = "bro_alerts.php";
-$shortcuts['bro']['status'] = "status_services.php";
-$shortcuts['bro']['service'] = "bro";
+$shortcuts['zeek'] = array();
+$shortcuts['zeek']['main'] = "pkg_edit.php?xml=zeek.xml";
+$shortcuts['zeek']['log'] = "zeek_alerts.php";
+$shortcuts['zeek']['status'] = "status_services.php";
+$shortcuts['zeek']['service'] = "zeek";
 
 ?>

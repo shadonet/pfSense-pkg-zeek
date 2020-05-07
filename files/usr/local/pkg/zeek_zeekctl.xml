@@ -7,7 +7,7 @@
 		/* $Id$ */
 		/* ====================================================================================== */
 		/*
-		* bro_broctl.xml
+		* zeek_zeekctl.xml
 		* part of pfSense (https://www.pfSense.org/)
 		* Copyright (c) 2018 Prosper Doko
 		* All rights reserved.
@@ -27,38 +27,38 @@
 		/* ====================================================================================== */
 		]]>
 	</copyright>
-	<name>brocontrol</name>
-	<title>Bro NSM: BroControl Settings</title>
-	<include_file>/usr/local/pkg/bro.inc</include_file>
+	<name>zeekcontrol</name>
+	<title>Zeek NSM: ZeekControl Settings</title>
+	<include_file>/usr/local/pkg/zeek.inc</include_file>
 	<tabs>
 		<tab>
 			<text>General</text>
-			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>BroControl Config</text>
-			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
+			<text>ZeekControl Config</text>
+			<url>/pkg_edit.php?xml=zeek_zeekctl.xml&amp;id=0</url>
 			<active/>
 		</tab>
 		<tab>
-			<text>Bro Cluster</text>
-			<url>/pkg_edit.php?xml=bro_cluster.xml&amp;id=0</url>
+			<text>Zeek Cluster</text>
+			<url>/pkg_edit.php?xml=zeek_cluster.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>Bro Scripts</text>
-			<url>/pkg.php?xml=bro_script.xml</url>
+			<text>Zeek Scripts</text>
+			<url>/pkg.php?xml=zeek_script.xml</url>
 		</tab>
 		<tab>
 			<text>Log Mgmt</text>
-			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek_log.xml&amp;id=0</url>
 		</tab>
 		<tab>
 			<text>Real Time Inspection</text>
-			<url>/bro_alerts.php</url>
+			<url>/zeek_alerts.php</url>
 		</tab>
 		<tab>
 			<text>XMLRPC Sync</text>
-			<url>/pkg_edit.php?xml=bro_sync.xml</url>
+			<url>/pkg_edit.php?xml=zeek_sync.xml</url>
 		</tab>
 	</tabs>
 	<fields>
@@ -69,7 +69,7 @@
 		<field>
 			<fielddescr>Administrator's Email</fielddescr>
 			<fieldname>admin_email</fieldname>
-			<description>Recipient address for all emails sent out by Bro and BroControl.</description>
+			<description>Recipient address for all emails sent out by Zeek and ZeekControl.</description>
 			<type>input</type>
 			<size>60</size>
 			<required/>
@@ -147,7 +147,7 @@
 			<fieldname>stats_log</fieldname>
 			<description>
 				<![CDATA[
-				Enable BroControl to write statistics to the stats.log file.<br/>
+				Enable ZeekControl to write statistics to the stats.log file.<br/>
 				A value of 1 means write to stats.log, and a value of 0 means do not write to stats.log.
 				]]>
 			</description>
@@ -189,9 +189,9 @@
 		</field>
 	</fields>
 	<custom_php_validation_command>
-		bro_validate_broctl($_POST, $input_errors);
+		zeek_validate_zeekctl($_POST, $input_errors);
 	</custom_php_validation_command>
 	<custom_php_resync_config_command>
-		bro_broctl_resync();
+		zeek_zeekctl_resync();
 	</custom_php_resync_config_command>
 </packagegui>
