@@ -12,7 +12,7 @@ This package has been tested on **pfSense 2.4.4-RELEASE-p2 (amd64)**. Maybe it m
 
 # Installation
 
-## Download the generated package through [pfSense-pkg-zeek](https://github.com/shadonet/pfSense-pkg-bro/raw/master/data/pfSense-pkg-bro-0.1.0.txz)
+## Download the generated package through [pfSense-pkg-zeek](https://github.com/shadonet/pfSense-pkg-bro/raw/master/data/pfSense-pkg-zeek-0.1.1.txz)
 
 ## Copy the package from your local machine to your firewall
 You’ll need to enable ssh access to your pfSense firewall as it’s not enabled by default. To do this, login to pfsense and browse to **System > Advanced**, then scroll down to the SSH section and check **‘Enable Secure Shell’**.
@@ -37,11 +37,11 @@ pkg update && pkg install -y zeek
 Finally, copy the package to your firewall temporary folder.
 
 ```shell
-scp ~/Downloads/pfSense-pkg-bro-0.1.0.txz root@firewall-ip-address:/tmp/
+scp ~/Downloads/pfSense-pkg-zeek-0.1.1.txz root@firewall-ip-address:/tmp/
 ```
 ## Install the package on the firewall via pkg add command
 ```shell
-pkg add pfSense-pkg-bro-0.1.0.txz
+pkg add pfSense-pkg-zeek-0.1.1.txz
 ```
 Now, you can access the interface by login to pfSense and browse to **Services > Zeek NSM**
 
