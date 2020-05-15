@@ -3,6 +3,7 @@
 * zeek.inc
 * part of pfSense (https://www.pfSense.org/)
 * Copyright (c) 2018 Prosper Doko
+* Contributions by Mark Overholser
 * All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");

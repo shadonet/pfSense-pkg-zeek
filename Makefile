@@ -11,7 +11,7 @@ COMMENT=	Zeek Network Security Monitor package for pfSense
 
 LICENSE=	APACHE20
 
-RUN_DEPENDS=	zeek>=3.0.3:security/zeek
+RUN_DEPENDS=	zeek>=0:security/zeek
 
 NO_BUILD=	yes
 NO_MTREE=	yes
