@@ -1,8 +1,9 @@
 <?php
 /*
-* bro_monitor_data.php
+* zeek_alert_data.php
 * part of pfSense (https://www.pfSense.org/)
 * Copyright (c) 2018 Prosper Doko
+* Contributions by Mark Overholser
 * All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,9 +29,9 @@ if ($_POST) {
 	$logfile = $_POST['logfile'];
 
 	switch ($program) {
-		case 'bro':
+		case 'zeek':
 		// Define log file
-		$log = '/usr/local/spool/bro/'.$logfile;
+		$log = '/usr/local/spool/zeek/'.$logfile;
 		$loghead = fetch_head($log);
 		echo "<thead>";
 
@@ -72,7 +73,7 @@ function fetch_head($log) {
 	return $loghead;
 }
 
-// Show bro Logs
+// Show zeek Logs
 function fetch_log($log) {
 	$log = escapeshellarg($log);
 	// Get data from form post

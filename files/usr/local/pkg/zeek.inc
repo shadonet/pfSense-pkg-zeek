@@ -1,8 +1,9 @@
 <?php
 /*
-* bro.inc
+* zeek.inc
 * part of pfSense (https://www.pfSense.org/)
 * Copyright (c) 2018 Prosper Doko
+* Contributions by Mark Overholser
 * All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,89 +35,89 @@ if (!function_exists("filter_configure")) {
 	require_once("filter.inc");
 }
 
-$shortcut_section = "bro";
+$shortcut_section = "zeek";
 
-define('BRO_LOCALBASE', '/usr/local');
-define('BRO_ETC', BRO_LOCALBASE .'/etc');
-define('BRO_LOGDIR', BRO_LOCALBASE .'/logs/current');
-define('BRO_SITEDIR', BRO_LOCALBASE .'/share/bro/site');
+define('ZEEK_LOCALBASE', '/usr/local');
+define('ZEEK_ETC', ZEEK_LOCALBASE .'/etc');
+define('ZEEK_LOGDIR', ZEEK_LOCALBASE .'/logs/current');
+define('ZEEK_SITEDIR', ZEEK_LOCALBASE .'/share/zeek/site');
 
 /*
 * Utility functions
 */
 
 /* Handle base64 encoding and linebreaks in textarea configuration fields*/
-function bro_text_area_decode($text) {
+function zeek_text_area_decode($text) {
 	return preg_replace('/\r\n/', "\n", base64_decode($text));
 }
 
-/* Get interface IP and netmask for Bro interfaces*/
-function bro_get_real_interface_address($iface) {
+/* Get interface IP and netmask for Zeek interfaces*/
+function zeek_get_real_interface_address($iface) {
 	if (!function_exists("get_interface_ip")) {
 		require_once("interfaces.inc");
 	}
 	return array(get_interface_ip($iface), gen_subnet_mask(get_interface_subnet($iface)));
 }
 
-/* Check whether Bro is enabled*/
-function bro_enabled() {
-	global $config, $bro_enabled;
-	$bro_enabled = false;
+/* Check whether Zeek is enabled*/
+function zeek_enabled() {
+	global $config, $zeek_enabled;
+	$zeek_enabled = false;
 
-	if (is_array($config['installedpackages']['bro']['config'])) {
-		// check whether Bro is enabled ...
-		if ($config['installedpackages']['bro']['config'][0]['enable_bro'] == "on") {
+	if (is_array($config['installedpackages']['zeek']['config'])) {
+		// check whether Zeek is enabled ...
+		if ($config['installedpackages']['zeek']['config'][0]['enable_zeek'] == "on") {
 			// ... and has at least one interface configured ...
-			if (!empty($config['installedpackages']['bro']['config'][0]['active_interface'])) {
-				$bro_enabled = true;
+			if (!empty($config['installedpackages']['zeek']['config'][0]['active_interface'])) {
+				$zeek_enabled = true;
 			}
 		}
 	}
-	return $bro_enabled;
+	return $zeek_enabled;
 }
 
-// Check whether Bro Cluster is enabled
-function bro_cluster_enabled() {
-	global $config, $bro_cluster_enabled;
-	$bro_cluster_enabled = false;
+// Check whether Zeek Cluster is enabled
+function zeek_cluster_enabled() {
+	global $config, $zeek_cluster_enabled;
+	$zeek_cluster_enabled = false;
 
-	if (is_array($config['installedpackages']['brocluster'])) {
-		// check whether bro cluster is enabled ...
-		if ($config['installedpackages']['brocluster']['config'][0]['enable_cluster'] == "on"){
-			$bro_cluster_enabled = true;
+	if (is_array($config['installedpackages']['zeekcluster'])) {
+		// check whether zeek cluster is enabled ...
+		if ($config['installedpackages']['zeekcluster']['config'][0]['enable_cluster'] == "on"){
+			$zeek_cluster_enabled = true;
 		}
 	}
-	return $bro_cluster_enabled;
+	return $zeek_cluster_enabled;
 }
 
-// Start and/or stop services according to Bro configuration
-function bro_restart_services() {
+// Start and/or stop services according to Zeek configuration
+function zeek_restart_services() {
 	global $config;
-	// do not (re)start bro services on boot
+	// do not (re)start zeek services on boot
 	if (platform_booting()) {
 		return;
 	}
 
-	if (bro_enabled()) {
-		if (!is_service_running('bro')) {
-			log_error("[bro] Starting service...");
-			mwexec(BRO_ETC . "/rc.d/bro start");
+	if (zeek_enabled()) {
+		if (!is_service_running('zeek')) {
+			log_error("[zeek] Starting service...");
+			mwexec(ZEEK_ETC . "/rc.d/zeek.sh start");
 		} else {
-			log_error("[bro] Reloading for configuration sync...");
-			mwexec(BRO_ETC . "/rc.d/bro restart");
+			log_error("[zeek] Reloading for configuration sync...");
+			mwexec(ZEEK_ETC . "/rc.d/zeek.sh restart");
 		}
-		// sleep for a couple seconds to give bro a chance to fire up fully.
+		// sleep for a couple seconds to give zeek a chance to fire up fully.
 		for ($i = 0; $i < 10; $i++) {
-			if (!is_service_running('bro')) {
+			if (!is_service_running('zeek')) {
 				sleep(1);
 			}
 		}
 	} else {
-		//Bro is disabled
-		if (is_service_running('bro')) {
-			log_error("[bro] Stopping service...");
-			//stop_service("bro");
-			mwexec(BRO_ETC . "/rc.d/bro stop");
+		//Zeek is disabled
+		if (is_service_running('zeek')) {
+			log_error("[zeek] Stopping service...");
+			//stop_service("zeek");
+			mwexec(ZEEK_ETC . "/rc.d/zeek.sh stop");
 		}
 	}}
 
@@ -125,36 +126,36 @@ function bro_restart_services() {
  */
 
  // Handle cronjob install/uninstall
- function bro_install_cron($should_install) {
+ function zeek_install_cron($should_install) {
 	 if (platform_booting()) {
 		 return;
 	 }
-	 $cron_cmd = BRO_BASE . "/bin/broctl cron ";
+	 $cron_cmd = ZEEK_LOCALBASE . "/bin/zeekctl cron ";
 
-	 if (($should_install) && (bro_enabled())) {
-		 log_error("[bro] Adding cronjobs ...");
+	 if (($should_install) && (zeek_enabled())) {
+		 log_error("[zeek] Adding cronjobs ...");
 		 install_cron_job("{$cron_cmd}", $should_install, "*/5", "*", "*", "*", "*", "root");
 	 } else {
-		 log_error("[bro] Removing cronjobs ...");
+		 log_error("[zeek] Removing cronjobs ...");
 		 install_cron_job("{$cron_cmd}", false);
 	 }
  }
 
- function bro_write_rcfile(){
-	 $bro_etc_dir = BRO_ETC;
+ function zeek_write_rcfile(){
+	 $zeek_etc_dir = ZEEK_ETC;
 	 $rcfile = array();
-	 $rcfile['file'] = 'bro.sh';
+	 $rcfile['file'] = 'zeek.sh';
 	 $rcfile['start'] = <<< EOD
-{$bro_etc_dir}/rc.d/bro start
+{$zeek_etc_dir}/rc.d/zeek onestart
 
 EOD;
 
 	 $rcfile['stop'] = <<< EOD
-{$bro_etc_dir}/rc.d/bro stop
+{$zeek_etc_dir}/rc.d/zeek stop
 # Just to be sure...
 sleep 5
-if [ -n "`/bin/ps auxw | /usr/bin/grep "bro" | /usr/bin/awk '{print $2}'`" ]; then
-/usr/bin/killall -9 bro 2>/dev/null
+if [ -n "`/bin/ps auxw | /usr/bin/grep "zeek" | /usr/bin/awk '{print $2}'`" ]; then
+/usr/bin/killall -9 zeek 2>/dev/null
 fi
 EOD;
 
@@ -162,106 +163,106 @@ EOD;
  }
 
  /*
- * Bro package install/uninstall
+ * Zeek package install/uninstall
  */
 
- function bro_install_command() {
+ function zeek_install_command() {
 	 global $g, $config;
 
-	 /* Hard kill any running bro processes that may have been started by any
+	 /* Hard kill any running zeek processes that may have been started by any
 	 of the pfSense scripts such as check_reload_status() or rc.start_packages*/
-	 if(is_process_running("bro")) {
-		 exec("/usr/bin/killall -z bro");
+	 if(is_process_running("zeek")) {
+		 exec("/usr/bin/killall -z zeek");
 		 sleep(2);
 	 }
 	 // Turn off tcp segmentation offload.
 	 exec("sysctl net.inet.tcp.tso=0");
 
-	 // creating a backup file of the original broctl.cfg no matter if user checked this or not
-	 if (!file_exists(BRO_ETC . "/broctl.cfg.backup")) {
-		 log_error("BRO: Creating backup of the original file to " . BRO_ETC . "/broctl.cfg.backup");
-		 copy(BRO_ETC . "/broctl.cfg", BRO_ETC . "/broctl.cfg.backup");
+	 // creating a backup file of the original zeekctl.cfg no matter if user checked this or not
+	 if (!file_exists(ZEEK_ETC . "/zeekctl.cfg.backup")) {
+		 log_error("[zeek] Creating backup of the original file to " . ZEEK_ETC . "/zeekctl.cfg.backup");
+		 copy(ZEEK_ETC . "/zeekctl.cfg", ZEEK_ETC . "/zeekctl.cfg.backup");
 	 }
 
 	 // creating a backup file of the original /etc/node no matter if user checked this or not
-	 if (!file_exists(BRO_ETC . "/node.cfg.backup")) {
-		 log_error("BRO: Creating backup of the original file to " . BRO_ETC . "/node.cfg.backup");
-		 copy(BRO_ETC . "/node.cfg", BRO_ETC . "/node.cfg.backup");
+	 if (!file_exists(ZEEK_ETC . "/node.cfg.backup")) {
+		 log_error("[zeek] Creating backup of the original file to " . ZEEK_ETC . "/node.cfg.backup");
+		 copy(ZEEK_ETC . "/node.cfg", ZEEK_ETC . "/node.cfg.backup");
 	 }
 
 	 // creating a backup file of the original /etc/networks no matter if user checked this or not
-	 if (!file_exists(BRO_ETC . "/networks.cfg.backup")) {
-		 log_error("BRO: Creating backup of the original file to " . BRO_ETC . "/networks.cfg.backup");
-		 copy(BRO_ETC . "/networks.cfg", BRO_ETC . "/networks.cfg.backup");
+	 if (!file_exists(ZEEK_ETC . "/networks.cfg.backup")) {
+		 log_error("[zeek] Creating backup of the original file to " . ZEEK_ETC . "/networks.cfg.backup");
+		 copy(ZEEK_ETC . "/networks.cfg", ZEEK_ETC . "/networks.cfg.backup");
 	 }
-	 // Change owner of bro created files
+	 // Change owner of zeek created files
 	 exec("chown -R root:wheel /usr/local/logs");
 
 	 exec("chown -R root:wheel /usr/local/spool");
 
-	 unlink_if_exists("/usr/local/etc/rc.d/bro.sh");
+	 unlink_if_exists("/usr/local/etc/rc.d/zeek.sh");
 
-	 // create bro rcfile
-	 bro_write_rcfile();
+	 // create zeek rcfile
+	 zeek_write_rcfile();
 
-	 write_config("[bro] Package installed.");
+	 write_config("[zeek] Package installed.");
  }
 
 
- function bro_deinstall_command() {
-	 bro_install_cron(false);
-	 mwexec("/bin/ps awux | /usr/bin/egrep -i 'bro -f|\(bro\)' | /usr/bin/awk '{ print $2 }' | /usr/bin/xargs kill");
-	 unlink_if_exists("/usr/local/etc/rc.d/bro.sh");
+ function zeek_deinstall_command() {
+	 zeek_install_cron(false);
+	 mwexec("/bin/ps awux | /usr/bin/egrep -i 'zeek -f|\(zeek\)' | /usr/bin/awk '{ print $2 }' | /usr/bin/xargs kill");
+	 unlink_if_exists("/usr/local/etc/rc.d/zeek.sh");
 
-	 if (bro_log_resync()) {
+	 if (zeek_log_resync()) {
 		 if (is_dir("/usr/local/logs")) {
 			 exec("/bin/rm -rf /usr/local/logs/*");
 		 }
 	 }
 
-	 if (is_array($config['installedpackages']['bro'])) {
-		 unset($config['installedpackages']['bro']);
+	 if (is_array($config['installedpackages']['zeek'])) {
+		 unset($config['installedpackages']['zeek']);
 	 }
-	 if (is_array($config['installedpackages']['brocontrol'])) {
-		 unset($config['installedpackages']['brocontrol']);
+	 if (is_array($config['installedpackages']['zeekcontrol'])) {
+		 unset($config['installedpackages']['zeekcontrol']);
 	 }
-	 if (is_array($config['installedpackages']['brocluster'])) {
-		 unset($config['installedpackages']['brocluster']);
+	 if (is_array($config['installedpackages']['zeekcluster'])) {
+		 unset($config['installedpackages']['zeekcluster']);
 	 }
-	 if (is_array($config['installedpackages']['broscript'])) {
-		 unset($config['installedpackages']['broscript']);
+	 if (is_array($config['installedpackages']['zeekscript'])) {
+		 unset($config['installedpackages']['zeekscript']);
 	 }
-	 if (is_array($config['installedpackages']['brolog'])) {
-		 unset($config['installedpackages']['brolog']);
+	 if (is_array($config['installedpackages']['zeeklog'])) {
+		 unset($config['installedpackages']['zeeklog']);
 	 }
 
-	 if (is_array($config['installedpackages']['brosync'])) {
-		 unset($config['installedpackages']['brosync']);
+	 if (is_array($config['installedpackages']['zeeksync'])) {
+		 unset($config['installedpackages']['zeeksync']);
 	 }
  }
 
  /*
- * Bro input validation
+ * Zeek input validation
  */
 
- // Bro NSM: General Settings input validation
- function bro_validate_general($post, &$input_errors) {
+ // Zeek NSM: General Settings input validation
+ function zeek_validate_general($post, &$input_errors) {
 	 global $config;
 
-	 if (is_array($config['installedpackages']['bro'])) {
-		 $settings = $config['installedpackages']['bro']['config'][0];
+	 if (is_array($config['installedpackages']['zeek'])) {
+		 $settings = $config['installedpackages']['zeek']['config'][0];
 	 } else {
 		 $settings = array();
 	 }
 
-	 if ($post['enable_bro'] == "on") {
-		 if (!bro_cluster_enabled()) {
+	 if ($post['enable_zeek'] == "on") {
+		 if (!zeek_cluster_enabled()) {
 			 if (empty($post['active_interface'])) {
-				 $input_errors[] = "You must select at least one interface under 'Bro Interface(s)' to enable Bro instance.";
-				 $input_errors[] = "If you intend to use Bro as cluster, then visit Bro NSM: Bro cluster, configure and save the cluster settings first.";
+				 $input_errors[] = "You must select at least one interface under 'Zeek Interface(s)' to enable Zeek instance.";
+				 $input_errors[] = "If you intend to use Zeek as cluster, then visit Zeek NSM: Zeek cluster, configure and save the cluster settings first.";
 			 }
 		 } else {
-			 log_error("[bro] Enabled as cluster. If this is not what you intended, visit Bro NSM: General and configure bro interfaces.");
+			 log_error("[zeek] Enabled as cluster. If this is not what you intended, visit Zeek NSM: General and configure zeek interfaces.");
 		 }
 	 }
 
@@ -279,7 +280,7 @@ EOD;
 	 unset($local_networks);
  }
 
- function bro_validate_broctl($post, &$input_errors) {
+ function zeek_validate_zeekctl($post, &$input_errors) {
 	 $mail_connection_summary = trim($post['mail_connection_summary']);
 	 if (!empty($mail_connection_summary) && (!is_numericint($mail_connection_summary))) {
 		 $input_errors[] = "You must enter a valid number in the 'mail connection summary' field.";
@@ -323,7 +324,7 @@ EOD;
 	 unset($log_rotate);
  }
 
- function bro_validate_cluster($post, &$input_errors) {
+ function zeek_validate_cluster($post, &$input_errors) {
 	 if ($post['enable_cluster'] == 'on') {
 		 $managerhost = trim($post['manager_host']);
 
@@ -359,37 +360,37 @@ EOD;
 	 }
  }
 
- function bro_validate_script($post, &$input_errors) {
+ function zeek_validate_script($post, &$input_errors) {
 	 global $config;
 
-	 //$settings = $config['installedpackages']['broscript']['config'];
-	 if (!bro_enabled()) {
-		 $input_errors[] = 'You must enabled Bro instance first';
+	 //$settings = $config['installedpackages']['zeekscript']['config'];
+	 if (!zeek_enabled()) {
+		 $input_errors[] = 'You must enabled Zeek instance first';
 	 } else {
-		 if (substr($post['broscriptpath'], -1, 1) == '/') {
+		 if (substr($post['zeekscriptpath'], -1, 1) == '/') {
 			 $input_errors[] = 'Script location must not end with a / character.';
 		 }
 
-		 if ($post['broscriptpath']{0} != '/') {
+		 if ($post['zeekscriptpath']{0} != '/') {
 			 $input_errors[] = 'Script location must start with a / character.';
 		 }
 
-		 if (!file_exists($post['broscriptpath'])) {
+		 if (!file_exists($post['zeekscriptpath'])) {
 			 $input_errors[] = "Configured script file does not exist.";
 		 }
 
-		 $ext = pathinfo($post['broscriptpath'], PATHINFO_EXTENSION);
-		 if ($ext!="bro") {
-			 $input_errors[] = "Configured script file has no valid extension. The extension must be 'bro'";
+		 $ext = pathinfo($post['zeekscriptpath'], PATHINFO_EXTENSION);
+		 if ($ext!="zeek") {
+			 $input_errors[] = "Configured script file has no valid extension. The extension must be 'zeek'";
 		 }
 	 }
  }
 
- function bro_settings_resync() {
+ function zeek_settings_resync() {
 	 global $config;
 
-	 if (is_array($config['installedpackages']['bro'])) {
-		 $settings = $config['installedpackages']['bro']['config'][0];
+	 if (is_array($config['installedpackages']['zeek'])) {
+		 $settings = $config['installedpackages']['zeek']['config'][0];
 	 } else {
 		 $settings = array();
 	 }
@@ -405,20 +406,20 @@ EOD;
 	 if ($iface) {
 		 $conf = '';
 		 $conf .= <<< EOD
-# Example BroControl node configuration.
+# Example ZeekControl node configuration.
 #
 # This example has a standalone node ready to go except for possibly changing
 # the sniffing interface.
 
 # This is a complete standalone configuration.  Most likely you will
 # only need to change the interface.
-[bro]
+[zeek]
 type=standalone
 host=$hostname
 interface=$iface
 
 ## Below is an example clustered configuration. If you use this,
-## remove the [bro] node above.
+## remove the [zeek] node above.
 
 #[logger]
 #type=logger
@@ -444,7 +445,7 @@ interface=$iface
 
 EOD;
 
-		$nodefile =  BRO_ETC . '/node.cfg';
+		$nodefile =  ZEEK_ETC . '/node.cfg';
 
 		file_put_contents($nodefile, $conf);
 		chmod($nodefile, 0640);
@@ -458,25 +459,25 @@ EOD;
 
 EOD;
 
-	$local_networks = preg_replace("/\s+/","\n", bro_text_area_decode($settings['local_networks']));
+	$local_networks = preg_replace("/\s+/","\n", zeek_text_area_decode($settings['local_networks']));
 	if (!empty($local_networks)) {
 		$conf .= "\n$local_networks";
 	}
-	$networksfile =  BRO_ETC . '/networks.cfg';
+	$networksfile =  ZEEK_ETC . '/networks.cfg';
 
 	file_put_contents($networksfile, $conf);
 	chmod($networksfile, 0640);
 
-	bro_sync_on_changes();
-	bro_restart_services();
-	bro_install_cron(true);
+	zeek_sync_on_changes();
+	zeek_restart_services();
+	zeek_install_cron(true);
 }
 
-function 	bro_broctl_resync() {
+function 	zeek_zeekctl_resync() {
 	global $config;
 
-	if (is_array($config['installedpackages']['brocontrol'])) {
-		$settings = $config['installedpackages']['brocontrol']['config'][0];
+	if (is_array($config['installedpackages']['zeekcontrol'])) {
+		$settings = $config['installedpackages']['zeekcontrol']['config'][0];
 	} else {
 		$settings = array();
 	}
@@ -491,18 +492,18 @@ function 	bro_broctl_resync() {
 	$statsduration = ($settings['stats_duration'] ? $settings['stats_duration'] : 0);
 	$logdir = ($settings['log_dir'] ? $settings['log_dir'] : '/usr/local/logs');
 	if (!is_dir($logdir)) {
-		log_error("[bro] Creating Bro log dir '{$logdir}' ...");
+		log_error("[zeek] Creating Zeek log dir '{$logdir}' ...");
 		safe_mkdir($logdir, 0755);
 	}
 
 	$conf = '';
 	$conf .= <<< EOD
-## Global BroControl configuration file.
+## Global ZeekControl configuration file.
 
 ###############################################
 # Mail Options
 
-# Recipient address for all emails sent out by Bro and BroControl.
+# Recipient address for all emails sent out by Zeek and ZeekControl.
 MailTo = $email
 
 # Mail connection summary reports each log rotation interval.  A value of 1
@@ -512,11 +513,11 @@ MailTo = $email
 MailConnectionSummary = $mailconnection
 
 # Lower threshold (in percentage of disk space) for space available on the
-# disk that holds SpoolDir. If less space is available, "broctl cron" starts
+# disk that holds SpoolDir. If less space is available, "zeekctl cron" starts
 # sending out warning emails.  A value of 0 disables this feature.
 MinDiskSpace = $diskspace
 
-# Send mail when "broctl cron" notices the availability of a host in the
+# Send mail when "zeekctl cron" notices the availability of a host in the
 # cluster to have changed.  A value of 1 means send mail when a host status
 # changes, and a value of 0 means do not send mail.
 MailHostUpDown = $mailhostupdown
@@ -529,32 +530,32 @@ MailHostUpDown = $mailhostupdown
 LogRotationInterval = $rotate
 
 # Expiration interval for archived log files in LogDir.  Files older than this
-# will be deleted by "broctl cron".  The interval is an integer followed by
+# will be deleted by "zeekctl cron".  The interval is an integer followed by
 # one of these time units:  day, hr, min.  A value of 0 means that logs
 # never expire.
 LogExpireInterval = $logexpiration
 
-# Enable BroControl to write statistics to the stats.log file.  A value of 1
+# Enable ZeekControl to write statistics to the stats.log file.  A value of 1
 # means write to stats.log, and a value of 0 means do not write to stats.log.
 StatsLogEnable = $statslog
 
 # Number of days that entries in the stats.log file are kept.  Entries older
-# than this many days will be removed upon running "broctl cron".  A value of 0
+# than this many days will be removed upon running "zeekctl cron".  A value of 0
 # means that entries never expire.
 StatsLogExpireInterval = $statsduration
 
 ###############################################
 # Other Options
 
-# Show all output of the broctl status command.  If set to 1, then all output
-# is shown.  If set to 0, then broctl status will not collect or show the peer
+# Show all output of the zeekctl status command.  If set to 1, then all output
+# is shown.  If set to 0, then zeekctl status will not collect or show the peer
 # information (and the command will run faster).
 StatusCmdShowAll = 0
 
-# Site-specific policy script to load. Bro will look for this in
-# $PREFIX/share/bro/site. A default local.bro comes preinstalled
+# Site-specific policy script to load. Zeek will look for this in
+# $PREFIX/share/zeek/site. A default local.zeek comes preinstalled
 # and can be customized as desired.
-SitePolicyScripts = local.bro
+SitePolicyScripts = local.zeek
 
 # Location of the log directory where log files will be archived each rotation
 # interval.
@@ -565,26 +566,26 @@ LogDir = $logdir
 SpoolDir = /usr/local/spool
 
 # Location of other configuration files that can be used to customize
-# BroControl operation (e.g. local networks, nodes).
+# ZeekControl operation (e.g. local networks, nodes).
 CfgDir = /usr/local/etc
 
 EOD;
 
-	$brocontrolfile =  BRO_ETC . '/broctl.cfg';
+	$zeekcontrolfile =  ZEEK_ETC . '/zeekctl.cfg';
 
-	file_put_contents($brocontrolfile, $conf);
-	chmod($brocontrolfile, 0640);
+	file_put_contents($zeekcontrolfile, $conf);
+	chmod($zeekcontrolfile, 0640);
 
-	bro_sync_on_changes();
-	bro_restart_services();
+	zeek_sync_on_changes();
+	zeek_restart_services();
 }
 
-function 	bro_cluster_resync() {
+function 	zeek_cluster_resync() {
 	// Put your own code to execute on package reconfiguration here
 	global $config;
 
-	if (is_array($config['installedpackages']['brocluster'])) {
-		$settings = $config['installedpackages']['brocluster']['config'][0];
+	if (is_array($config['installedpackages']['zeekcluster'])) {
+		$settings = $config['installedpackages']['zeekcluster']['config'][0];
 	} else {
 		$settings = array();
 	}
@@ -610,20 +611,20 @@ function 	bro_cluster_resync() {
 	if ($iface1 && $iface2) {
 		$conf = '';
 		$conf .= <<< EOD
-# Example BroControl node configuration.
+# Example ZeekControl node configuration.
 #
 # This example has a standalone node ready to go except for possibly changing
 # the sniffing interface.
 
 # This is a complete standalone configuration.  Most likely you will
 # only need to change the interface.
-#[bro]
+#[zeek]
 #type=standalone
 #host=localhost
 #interface=eth0
 
 ## Below is an example clustered configuration. If you use this,
-## remove the [bro] node above.
+## remove the [zeek] node above.
 
 #[logger]
 #type=logger
@@ -649,30 +650,30 @@ interface=$iface2
 
 EOD;
 
-		$nodefile =  BRO_ETC . '/node.cfg';
+		$nodefile =  ZEEK_ETC . '/node.cfg';
 
 		file_put_contents($nodefile, $conf);
 		chmod($nodefile, 0640);
 
 	}
-	bro_sync_on_changes();
-	bro_restart_services();
+	zeek_sync_on_changes();
+	zeek_restart_services();
 }
 
-function 	bro_log_resync() {
-	global $config, $brologstate;
-	$brologstate = false;
+function 	zeek_log_resync() {
+	global $config, $zeeklogstate;
+	$zeeklogstate = false;
 
-	if (is_array($config['installedpackages']['brolog'])) {
-		// check whether bro cluster is enabled ...
-		if ($config['installedpackages']['brolog']['config'][0]['remove_bro_log'] == "on"){
-			$brologstate = true;
+	if (is_array($config['installedpackages']['zeeklog'])) {
+		// check whether zeek cluster is enabled ...
+		if ($config['installedpackages']['zeeklog']['config'][0]['remove_zeek_log'] == "on"){
+			$zeeklogstate = true;
 		}
 	}
-	return $brologstate;
+	return $zeeklogstate;
 }
 
-function 	bro_script_resync() {
+function 	zeek_script_resync() {
 	global $config;
 
 	$conf = '';
@@ -766,23 +767,23 @@ function 	bro_script_resync() {
 
 EOD;
 
-	$scripts = $config['installedpackages']['broscript']['config'];
+	$scripts = $config['installedpackages']['zeekscript']['config'];
 
-	if (bro_enabled()){
+	if (zeek_enabled()){
 		if (is_array($scripts) && !empty($scripts)) {
 			foreach ($scripts as $script) {
 
-				$path = $script['broscriptpath'];
+				$path = $script['zeekscriptpath'];
 
 				$filename = '';
-				if ($script['broscriptpath'] == '') {
+				if ($script['zeekscriptpath'] == '') {
 					$filename = '';
 				}else {
-					$filename = "@load ".basename($path,".bro")."";
+					$filename = "@load ".basename($path,".zeek")."";
 				}
 
 				$test =  escapeshellarg($path);
-				$dest = escapeshellarg('/usr/local/share/bro/site');
+				$dest = escapeshellarg('/usr/local/share/zeek/site');
 				exec("/bin/cp $test $dest");
 				$newline = "\n";
 
@@ -794,36 +795,36 @@ EOD;
 		}
 	}
 
-	$destpath = '/usr/local/share/bro/site/local.bro';
+	$destpath = '/usr/local/share/zeek/site/local.zeek';
 
 	file_put_contents($destpath, $conf);
 	chmod($destpath, 0640);
 
 	}else {
-		log_error("You must enabled Bro instance first.");
+		log_error("You must enabled Zeek instance first.");
 	}
-	bro_sync_on_changes();
-	bro_restart_services();
+	zeek_sync_on_changes();
+	zeek_restart_services();
 }
 
 /*
-* Bro XMLRPC sync
+* Zeek XMLRPC sync
 */
 
 // Uses XMLRPC to synchronize the changes to a remote node
-function bro_sync_on_changes() {
+function zeek_sync_on_changes() {
 	global $config;
 
-	if (is_array($config['installedpackages']['brosync']['config'])) {
-		$bro_sync = $config['installedpackages']['brosync']['config'][0];
-		$synconchanges = $bro_sync['synconchanges'];
-		$synctimeout = $bro_sync['synctimeout'] ?: '250';
+	if (is_array($config['installedpackages']['zeeksync']['config'])) {
+		$zeek_sync = $config['installedpackages']['zeeksync']['config'][0];
+		$synconchanges = $zeek_sync['synconchanges'];
+		$synctimeout = $zeek_sync['synctimeout'] ?: '250';
 		switch ($synconchanges) {
 			case "manual":
-			if (is_array($bro_sync['row'])) {
-				$rs = $bro_sync['row'];
+			if (is_array($zeek_sync['row'])) {
+				$rs = $zeek_sync['row'];
 			} else {
-				log_error("[bro] XMLRPC sync is enabled but there are no hosts configured as replication targets.");
+				log_error("[zeek] XMLRPC sync is enabled but there are no hosts configured as replication targets.");
 				return;
 			}
 			break;
@@ -843,13 +844,13 @@ function bro_sync_on_changes() {
 					$rs[0]['syncport'] = $config['system']['webgui']['port'] ?: '443';
 				}
 				if ($system_carp['synchronizetoip'] == "") {
-					log_error("[bro] XMLRPC CARP/HA sync is enabled but there are no system backup hosts configured as replication targets.");
+					log_error("[zeek] XMLRPC CARP/HA sync is enabled but there are no system backup hosts configured as replication targets.");
 					return;
 				} else {
 					$rs[0]['syncdestinenable'] = TRUE;
 				}
 			} else {
-				log_error("[bro] XMLRPC CARP/HA sync is enabled but there are no system backup hosts configured as replication targets.");
+				log_error("[zeek] XMLRPC CARP/HA sync is enabled but there are no system backup hosts configured as replication targets.");
 				return;
 			}
 			break;
@@ -858,7 +859,7 @@ function bro_sync_on_changes() {
 			break;
 		}
 		if (is_array($rs)) {
-			log_error("[bro] XMLRPC sync is starting.");
+			log_error("[zeek] XMLRPC sync is starting.");
 			foreach ($rs as $sh) {
 				// Only sync enabled replication targets
 				if ($sh['syncdestinenable']) {
@@ -884,23 +885,23 @@ function bro_sync_on_changes() {
 						$valid = FALSE;
 					}
 					if ($valid) {
-						bro_do_xmlrpc_sync($sync_to_ip, $port, $protocol, $username, $password, $synctimeout);
+						zeek_do_xmlrpc_sync($sync_to_ip, $port, $protocol, $username, $password, $synctimeout);
 					} else {
-						log_error("[bro] XMLRPC sync with '{$sync_to_ip}' aborted due to the following error(s): {$error}");
+						log_error("[zeek] XMLRPC sync with '{$sync_to_ip}' aborted due to the following error(s): {$error}");
 					}
 				}
 			}
-			log_error("[bro] XMLRPC sync completed.");
+			log_error("[zeek] XMLRPC sync completed.");
 		}
 	}
 }
 
 // Do the actual XMLRPC sync
-function bro_do_xmlrpc_sync($sync_to_ip, $username, $password, $varsyncport, $varsyncprotocol, $varsynctimeout) {
+function zeek_do_xmlrpc_sync($sync_to_ip, $username, $password, $varsyncport, $varsyncprotocol, $varsynctimeout) {
 	global $config, $g;
 
 	if ($username == "" || $password == "" || $sync_to_ip == "" || $port == "" || $protocol == "") {
-		log_error("[bro] A required XMLRPC sync parameter (username, password, replication target, port or protocol) is empty ... aborting pkg sync");
+		log_error("[zeek] A required XMLRPC sync parameter (username, password, replication target, port or protocol) is empty ... aborting pkg sync");
 		return;
 	}
 	// Take care of IPv6 literal address
@@ -910,10 +911,10 @@ function bro_do_xmlrpc_sync($sync_to_ip, $username, $password, $varsyncport, $va
 	$url = "{$protocol}://{$sync_to_ip}";
 	/* XML will hold the sections to sync */
 	$xml = array();
-	$xml['bro'] = $config['installedpackages']['bro'];
-	$xml['brocontrol'] = $config['installedpackages']['brocontrol'];
-	$xml['brocluster'] = $config['installedpackages']['brocluster'];
-	$xml['broscript'] = $config['installedpackages']['broscript'];
+	$xml['zeek'] = $config['installedpackages']['zeek'];
+	$xml['zeekcontrol'] = $config['installedpackages']['zeekcontrol'];
+	$xml['zeekcluster'] = $config['installedpackages']['zeekcluster'];
+	$xml['zeekscript'] = $config['installedpackages']['zeekscript'];
 
 	/* Assemble XMLRPC payload */
 	$params = array(XML_RPC_encode($password), XML_RPC_encode($xml));
@@ -930,22 +931,22 @@ function bro_do_xmlrpc_sync($sync_to_ip, $username, $password, $varsyncport, $va
 	$resp = $cli->send($msg, $synctimeout);
 	if (!$resp) {
 		$error = "A communication error occurred while attempting XMLRPC sync with {$url}:{$port}.";
-		log_error("[bro] {$error}");
-		file_notice("sync_settings", $error, "bro Settings Sync", "");
+		log_error("[zeek] {$error}");
+		file_notice("sync_settings", $error, "zeek Settings Sync", "");
 	} elseif ($resp->faultCode()) {
 		$cli->setDebug(1);
 		$resp = $cli->send($msg, $synctimeout);
 		$error = "An error code was received while attempting XMLRPC sync with {$url}:{$port} - Code " . $resp->faultCode() . ": " . $resp->faultString();
-		log_error("[bro] {$error}");
-		file_notice("sync_settings", $error, "bro Settings Sync", "");
+		log_error("[zeek] {$error}");
+		file_notice("sync_settings", $error, "zeek Settings Sync", "");
 	} else {
-		log_error("[bro] XMLRPC sync successfully completed with {$url}:{$port}.");
+		log_error("[zeek] XMLRPC sync successfully completed with {$url}:{$port}.");
 	}
 
-	/* Tell bro to reload our settings on the destination sync host. */
+	/* Tell zeek to reload our settings on the destination sync host. */
 	$method = 'pfsense.exec_php';
-	$execcmd = "require_once('/usr/local/pkg/bro.inc');\n";
-	$execcmd .= "bro_all_after_XMLRPC_resync();";
+	$execcmd = "require_once('/usr/local/pkg/zeek.inc');\n";
+	$execcmd .= "zeek_all_after_XMLRPC_resync();";
 	/* Assemble XMLRPC payload */
 	$params = array(XML_RPC_encode($password), XML_RPC_encode($execcmd));
 
@@ -955,27 +956,27 @@ function bro_do_xmlrpc_sync($sync_to_ip, $username, $password, $varsyncport, $va
 	$resp = $cli->send($msg, $synctimeout);
 	if (!$resp) {
 		$error = "A communication error occurred while attempting XMLRPC sync with {$url}:{$port} (pfsense.exec_php).";
-		log_error("[bro] {$error}");
-		file_notice("sync_settings", $error, "bro Settings Sync", "");
+		log_error("[zeek] {$error}");
+		file_notice("sync_settings", $error, "zeek Settings Sync", "");
 	} elseif ($resp->faultCode()) {
 		$cli->setDebug(1);
 		$resp = $cli->send($msg, $synctimeout);
 		$error = "An error code was received while attempting XMLRPC sync with {$url}:{$port} - Code " . $resp->faultCode() . ": " . $resp->faultString();
-		log_error("[bro] {$error}");
-		file_notice("sync_settings", $error, "bro Settings Sync", "");
+		log_error("[zeek] {$error}");
+		file_notice("sync_settings", $error, "zeek Settings Sync", "");
 	} else {
-		log_error("[bro] XMLRPC reload data success with {$url}:{$port} (pfsense.exec_php).");
+		log_error("[zeek] XMLRPC reload data success with {$url}:{$port} (pfsense.exec_php).");
 	}
 }
 
-function bro_all_after_XMLRPC_resync() {
-	bro_broctl_resync();
-	bro_cluster_resync();
-	bro_script_resync();
+function zeek_all_after_XMLRPC_resync() {
+	zeek_zeekctl_resync();
+	zeek_cluster_resync();
+	zeek_script_resync();
 
-	log_error("[bro]: Finished XMLRPC process. It should be OK. For more information look at the host which started sync.");
+	log_error("[zeek]: Finished XMLRPC process. It should be OK. For more information look at the host which started sync.");
 
-	exec(BRO_ETC . "/rc.d/bro restart");
+	exec(ZEEK_ETC . "/rc.d/zeek.sh restart");
 }
 
 ?>

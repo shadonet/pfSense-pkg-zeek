@@ -7,9 +7,10 @@
 		/* $Id$ */
 		/* ====================================================================================== */
 		/*
-		bro.xml
-		*part of pfSense (https://www.pfSense.org/)
-		*Copyright (c) 2018 Prosper Doko
+		zeek.xml
+		* part of pfSense (https://www.pfSense.org/)
+		* Copyright (c) 2018 Prosper Doko
+		* Contributions by Mark Overholser
 		* All rights reserved.
 		*
 		* Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,66 +28,66 @@
 		/* ====================================================================================== */
 		]]>
 	</copyright>
-	<description>Bro NSM Package</description>
-	<name>bro</name>
+	<description>Zeek NSM Package</description>
+	<name>zeek</name>
 	<version>%%PKGVERSION%%</version>
-	<title>Bro NSM: General Settings</title>
-	<include_file>/usr/local/pkg/bro.inc</include_file>
+	<title>Zeek NSM: General Settings</title>
+	<include_file>/usr/local/pkg/zeek.inc</include_file>
 	<menu>
-		<name>Bro NSM</name>
-		<tooltiptext>Set up Bro NSM settings</tooltiptext>
+		<name>Zeek NSM</name>
+		<tooltiptext>Set up Zeek NSM settings</tooltiptext>
 		<section>Services</section>
-		<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+		<url>/pkg_edit.php?xml=zeek.xml&amp;id=0</url>
 	</menu>
 	<service>
-		<name>bro</name>
-		<rcfile>bro.sh</rcfile>
-		<executable>bro</executable>
-		<description>Bro Network Security Monitor service</description>
+		<name>zeek</name>
+		<rcfile>zeek.sh</rcfile>
+		<executable>zeek</executable>
+		<description>Zeek Network Security Monitor service</description>
 	</service>
 	<tabs>
 		<tab>
 			<text>General</text>
-			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek.xml&amp;id=0</url>
 			<active/>
 		</tab>
 		<tab>
-			<text>BroControl Config</text>
-			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
+			<text>ZeekControl Config</text>
+			<url>/pkg_edit.php?xml=zeek_zeekctl.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>Bro Cluster</text>
-			<url>/pkg_edit.php?xml=bro_cluster.xml&amp;id=0</url>
+			<text>Zeek Cluster</text>
+			<url>/pkg_edit.php?xml=zeek_cluster.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>Bro Scripts</text>
-			<url>/pkg.php?xml=bro_script.xml</url>
+			<text>Zeek Scripts</text>
+			<url>/pkg.php?xml=zeek_script.xml</url>
 		</tab>
 		<tab>
 			<text>Log Mgmt</text>
-			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek_log.xml&amp;id=0</url>
 		</tab>
 		<tab>
 			<text>Real Time Inspection</text>
-			<url>/bro_alerts.php</url>
+			<url>/zeek_alerts.php</url>
 		</tab>
 		<tab>
 			<text>XMLRPC Sync</text>
-			<url>/pkg_edit.php?xml=bro_sync.xml</url>
+			<url>/pkg_edit.php?xml=zeek_sync.xml</url>
 		</tab>
 	</tabs>
 	<fields>
 		<field>
-			<name>Bro General Settings</name>
+			<name>Zeek General Settings</name>
 			<type>listtopic</type>
 		</field>
 		<field>
-			<fielddescr>Enable Bro NSM</fielddescr>
-			<fieldname>enable_bro</fieldname>
-			<description>Check to enable the Bro NSM.</description>
+			<fielddescr>Enable Zeek NSM</fielddescr>
+			<fieldname>enable_zeek</fieldname>
+			<description>Check to enable the Zeek NSM.</description>
 			<sethelp>
 				<![CDATA[
-				<strong><span class="errmsg">Note:</span> If unchecked, all bro services will be disabled and stopped.</strong>
+				<strong><span class="errmsg">Note:</span> If unchecked, all zeek services will be disabled and stopped.</strong>
 				]]>
 			</sethelp>
 			<type>checkbox</type>
@@ -100,11 +101,11 @@
 			<default_value>localhost</default_value>
 		</field>
 		<field>
-			<fielddescr>Bro Interface(s)</fielddescr>
+			<fielddescr>Zeek Interface(s)</fielddescr>
 			<fieldname>active_interface</fieldname>
 			<description>
 				<![CDATA[
-				Set the right interface this bro instance will monitor to.<br/>
+				Set the right interface this zeek instance will monitor to.<br/>
 				<strong><span class="errmsg">Hint:</span> In most cases, you'll want to use WAN here.</strong>
 				]]>
 			</description>
@@ -116,7 +117,7 @@
 			<fieldname>local_networks</fieldname>
 			<description>
 				<![CDATA[
-				Enter the IP addresses (e.g.:"10.0.0.0/8" or "fe80::/64") of the networks that Bro will consider local to the monitored environment.<br/>
+				Enter the IP addresses (e.g.:"10.0.0.0/8" or "fe80::/64") of the networks that Zeek will consider local to the monitored environment.<br/>
 				<strong>Note: Put each entry on a separate line.</strong>
 				]]>
 			</description>
@@ -127,15 +128,15 @@
 		</field>
 	</fields>
 	<custom_php_install_command>
-		bro_install_command();
+		zeek_install_command();
 	</custom_php_install_command>
 	<custom_php_deinstall_command>
-		bro_deinstall_command();
+		zeek_deinstall_command();
 	</custom_php_deinstall_command>
 	<custom_php_validation_command>
-		bro_validate_general($_POST, $input_errors);
+		zeek_validate_general($_POST, $input_errors);
 	</custom_php_validation_command>
 	<custom_php_resync_config_command>
-		bro_settings_resync();
+		zeek_settings_resync();
 	</custom_php_resync_config_command>
 </packagegui>

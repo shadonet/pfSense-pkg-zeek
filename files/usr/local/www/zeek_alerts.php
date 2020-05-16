@@ -1,8 +1,9 @@
 <?php
 /*
-* bro_alerts.php
+* zeek_alerts.php
 * part of pfSense (https://www.pfSense.org/)
 * Copyright (c) 2018 Prosper Doko
+* Contributions by Mark Overholser
 * All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +25,8 @@ require_once("/etc/inc/pkg-utils.inc");
 require_once("/etc/inc/globals.inc");
 require_once("guiconfig.inc");
 
-$pgtitle = array(gettext("Package"), gettext("Bro"), gettext("Alerts"));
-$shortcut_section = "bro";
+$pgtitle = array(gettext("Package"), gettext("Zeek"), gettext("Alerts"));
+$shortcut_section = "zeek";
 include("head.inc");
 
 if ($savemsg) {
@@ -33,13 +34,13 @@ if ($savemsg) {
 }
 
 $tab_array = array();
-$tab_array[] = array(gettext("General"), false, "/pkg_edit.php?xml=bro.xml&amp;id=0");
-$tab_array[] = array(gettext("BroControl Config"), false, "/pkg_edit.php?xml=bro_broctl.xml&amp;id=0");
-$tab_array[] = array(gettext("Bro Cluster"), false, "/pkg_edit.php?xml=bro_cluster.xml&amp;id=0");
-$tab_array[] = array(gettext("Bro Scripts"), false, "/pkg.php?xml=bro_script.xml");
-$tab_array[] = array(gettext("Log Mgmt"), false, "/pkg_edit.php?xml=bro_log.xml&amp;id=0");
-$tab_array[] = array(gettext("Real Time Inspection"), true, "/bro_alerts.php");
-$tab_array[] = array(gettext("XMLRPC Sync"), false, "/pkg_edit.php?xml=bro_sync.xml");
+$tab_array[] = array(gettext("General"), false, "/pkg_edit.php?xml=zeek.xml&amp;id=0");
+$tab_array[] = array(gettext("ZeekControl Config"), false, "/pkg_edit.php?xml=zeek_zeekctl.xml&amp;id=0");
+$tab_array[] = array(gettext("Zeek Cluster"), false, "/pkg_edit.php?xml=zeek_cluster.xml&amp;id=0");
+$tab_array[] = array(gettext("Zeek Scripts"), false, "/pkg.php?xml=zeek_script.xml");
+$tab_array[] = array(gettext("Log Mgmt"), false, "/pkg_edit.php?xml=zeek_log.xml&amp;id=0");
+$tab_array[] = array(gettext("Real Time Inspection"), true, "/zeek_alerts.php");
+$tab_array[] = array(gettext("XMLRPC Sync"), false, "/pkg_edit.php?xml=zeek_sync.xml");
 
 display_top_tabs($tab_array);
 ?>
@@ -93,7 +94,7 @@ display_top_tabs($tab_array);
 				<tbody>
 					<tr><td>
 						<table width="100%" border="0" cellspacing="20" cellpadding="10">
-							<tbody id="broView">
+							<tbody id="zeekView">
 								<tr><td></td></tr>
 							</tbody>
 						</table>
@@ -108,7 +109,7 @@ display_top_tabs($tab_array);
 <script type="text/javascript">
 //<![CDATA[
 $( "#logfile" ).change(function() {
-	showLog('broView', 'bro_alert_data.php', 'bro');
+	showLog('zeekView', 'zeek_alert_data.php', 'zeek');
 });
 
 function updateSelect() {
@@ -144,7 +145,7 @@ function showLog(content, url, program) {
 
 	function updateAllLogs() {
 		updateSelect();
-		showLog('broView', 'bro_alert_data.php', 'bro');
+		showLog('zeekView', 'zeek_alert_data.php', 'zeek');
 		setTimeout(updateAllLogs, 10000);
 	}
 

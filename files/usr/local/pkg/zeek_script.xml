@@ -7,9 +7,10 @@
 		/* $Id$ */
 		/* ====================================================================================== */
 		/*
-		* bro_script.xml
+		* zeek_script.xml
 		* part of pfSense (https://www.pfSense.org/)
 		* Copyright (c) 2018 Prosper Doko
+		* Contributions by Mark Overholser
 		* All rights reserved.
 		*
 		* Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,40 +28,40 @@
 		/* ====================================================================================== */
 		]]>
 	</copyright>
-	<name>broscript</name>
-	<title>Bro NSM: Scripts Mgmt</title>
-	<include_file>/usr/local/pkg/bro.inc</include_file>
-	<delete_string>A Bro script has been deleted.</delete_string>
-	<addedit_string>A Bro script has been created/modified.</addedit_string>
+	<name>Zeekscript</name>
+	<title>Zeek NSM: Scripts Mgmt</title>
+	<include_file>/usr/local/pkg/zeek.inc</include_file>
+	<delete_string>A Zeek script has been deleted.</delete_string>
+	<addedit_string>A Zeek script has been created/modified.</addedit_string>
 	<tabs>
 		<tab>
 			<text>General</text>
-			<url>/pkg_edit.php?xml=bro.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>BroControl Config</text>
-			<url>/pkg_edit.php?xml=bro_broctl.xml&amp;id=0</url>
+			<text>ZeekControl Config</text>
+			<url>/pkg_edit.php?xml=zeek_zeekctl.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>Bro Cluster</text>
-			<url>/pkg_edit.php?xml=bro_cluster.xml&amp;id=0</url>
+			<text>Zeek Cluster</text>
+			<url>/pkg_edit.php?xml=zeek_cluster.xml&amp;id=0</url>
 		</tab>
 		<tab>
-			<text>Bro Scripts</text>
-			<url>/pkg.php?xml=bro_script.xml</url>
+			<text>Zeek Scripts</text>
+			<url>/pkg.php?xml=zeek_script.xml</url>
 			<active/>
 		</tab>
 		<tab>
 			<text>Log Mgmt</text>
-			<url>/pkg_edit.php?xml=bro_log.xml&amp;id=0</url>
+			<url>/pkg_edit.php?xml=zeek_log.xml&amp;id=0</url>
 		</tab>
 		<tab>
 			<text>Real Time Inspection</text>
-			<url>/bro_alerts.php</url>
+			<url>/zeek_alerts.php</url>
 		</tab>
 		<tab>
 			<text>XMLRPC Sync</text>
-			<url>/pkg_edit.php?xml=bro_sync.xml</url>
+			<url>/pkg_edit.php?xml=zeek_sync.xml</url>
 		</tab>
 	</tabs>
 	<adddeleteeditpagefields>
@@ -86,11 +87,11 @@
 			<size>20</size>
 		</field>
 		<field>
-			<fielddescr>Bro Script Path</fielddescr>
-			<fieldname>broscriptpath</fieldname>
+			<fielddescr>Zeek Script Path</fielddescr>
+			<fieldname>zeekscriptpath</fieldname>
 			<description>
 				<![CDATA[
-				Enter your Bro script's absolute path (e.g.: "/usr/local/www/detect_ddos.bro" or "/tmp/detect_ddos.bro")<br/>
+				Enter your Zeek script's absolute path (e.g.: "/usr/local/www/detect_ddos.zeek" or "/tmp/detect_ddos.zeek")<br/>
 				<strong>Note: Be sure that the path is correct.</strong>
 				]]>
 			</description>
@@ -107,12 +108,12 @@
 		</field>
 	</fields>
 	<custom_php_validation_command>
-		bro_validate_script($_POST, $input_errors);
+		zeek_validate_script($_POST, $input_errors);
 	</custom_php_validation_command>
 	<custom_delete_php_command>
-		bro_script_resync();
+		zeek_script_resync();
 	</custom_delete_php_command>
 	<custom_php_resync_config_command>
-		bro_script_resync();
+		zeek_script_resync();
 	</custom_php_resync_config_command>
 </packagegui>
