@@ -4,7 +4,7 @@ Zeek Network Security Monitor package for pfSense router/firewall
 
 <br>
 
-![Demo](demo/bro-pfSense.gif)
+![Demo](demo/zeek-pfsense.gif)
 
 # Compatibility
 This package has been tested on **pfSense 2.4.5-RELEASE (amd64)**. Maybe it might not work with older versions of pfSense.
