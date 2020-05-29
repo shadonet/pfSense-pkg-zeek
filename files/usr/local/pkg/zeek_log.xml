@@ -9,9 +9,9 @@
 		/*
 		* zeek_log.xml
 		* part of pfSense (https://www.pfSense.org/)
-		* Copyright (c) 2018 Prosper Doko
+		* Copyright (c) 2018-2020 Prosper Doko
+		* Copyright (c) 2020 Mark Overholser
 		* All rights reserved.
-		* Contributions by Mark Overholser
 		*
 		* Licensed under the Apache License, Version 2.0 (the "License");
 		* you may not use this file except in compliance with the License.

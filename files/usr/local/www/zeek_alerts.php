@@ -2,8 +2,8 @@
 /*
 * zeek_alerts.php
 * part of pfSense (https://www.pfSense.org/)
-* Copyright (c) 2018 Prosper Doko
-* Contributions by Mark Overholser
+* Copyright (c) 2018-2020 Prosper Doko
+* Copyright (c) 2020 Mark Overholser
 * All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
