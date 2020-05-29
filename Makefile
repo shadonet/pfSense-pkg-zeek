@@ -1,12 +1,12 @@
 # $FreeBSD$
 
 PORTNAME=	pfSense-pkg-zeek
-PORTVERSION=	0.1.1
+PORTVERSION=	3.0.6
 CATEGORIES=	security
 MASTER_SITES=	# none
 DISTFILES=	# none
 
-MAINTAINER=	coreteam@pfsense.org
+MAINTAINER=	ingprs01@gmail.com
 COMMENT=	Zeek Network Security Monitor package for pfSense
 
 LICENSE=	APACHE20
