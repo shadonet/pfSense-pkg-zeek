@@ -216,26 +216,6 @@ function zeek_deinstall_command() {
 			exec("/bin/rm -rf /usr/local/logs/*");
 		}
 	}
-
-	if (is_array($config['installedpackages']['zeek'])) {
-		unset($config['installedpackages']['zeek']);
-	}
-	if (is_array($config['installedpackages']['zeekcontrol'])) {
-		unset($config['installedpackages']['zeekcontrol']);
-	}
-	if (is_array($config['installedpackages']['zeekcluster'])) {
-		unset($config['installedpackages']['zeekcluster']);
-	}
-	if (is_array($config['installedpackages']['zeekscript'])) {
-		unset($config['installedpackages']['zeekscript']);
-	}
-	if (is_array($config['installedpackages']['zeeklog'])) {
-		unset($config['installedpackages']['zeeklog']);
-	}
-
-	if (is_array($config['installedpackages']['zeeksync'])) {
-		unset($config['installedpackages']['zeeksync']);
-	}
 }
 
 /*
