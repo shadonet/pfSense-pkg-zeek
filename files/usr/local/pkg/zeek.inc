@@ -243,7 +243,7 @@ function zeek_validate_general($post, &$input_errors) {
 		}
 	}
 
-	if(!empty($post['hostname']) && !is_ipaddr($post['hostname']) && !is_domain($post['hostname'])) {
+	if (!empty($post['hostname']) && !is_ipaddr($post['hostname']) && !is_domain($post['hostname'])) {
 		$input_errors[] = "'Hostname' must contain a valid IP address or domain name.";
 	}
 
