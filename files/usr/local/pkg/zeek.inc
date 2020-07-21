@@ -270,6 +270,12 @@ function zeek_validate_zeekctl($post, &$input_errors) {
 	}
 	unset($log_expiration);
 
+	$stats_duration = trim($post['stats_duration']);
+	if (!empty($stats_duration) && (!is_numericint($stats_duration))) {
+		$input_errors[] = "Enter a valid number in the 'stats duration' field.";
+	}
+	unset($stats_duration);
+
 	if (substr($post['log_dir'], -1, 1) == '/') {
 		$input_errors[] = 'Log location must not end with a / character.';
 	}
@@ -280,6 +286,18 @@ function zeek_validate_zeekctl($post, &$input_errors) {
 
 	if (strlen($post['log_dir']) <= 3) {
 		$input_errors[] = "Configured log location directory is not valid.";
+	}
+
+	if (substr($post['spool_dir'], -1, 1) == '/') {
+		$input_errors[] = 'Spool location must not end with a / character.';
+	}
+
+	if ($post['spool_dir']{0} != '/') {
+		$input_errors[] = 'Spool location must start with a / character.';
+	}
+
+	if (strlen($post['spool_dir']) <= 3) {
+		$input_errors[] = "Configured spool location directory is not valid.";
 	}
 
 	$log_rotate = trim($post['log_rotate']);
@@ -456,9 +474,14 @@ function zeek_zeekctl_resync() {
 	$statslog = ($settings['stats_log'] == "on") ? 1 : 0;
 	$statsduration = $settings['stats_duration'] ? $settings['stats_duration'] : 0;
 	$logdir = $settings['log_dir'] ? $settings['log_dir'] : '/usr/local/logs';
+	$spooldir = $settings['spool_dir'] ? $settings['spool_dir'] : '/usr/local/spool';
 	if (!is_dir($logdir)) {
 		log_error("[zeek] Creating Zeek log dir '{$logdir}' ...");
 		safe_mkdir($logdir, 0755);
+	}
+	if (!is_dir($spooldir)) {
+		log_error("[zeek] Creating Zeek spool dir '{$spooldir}' ...");
+		safe_mkdir($spooldir, 0755);
 	}
 
 	$conf = '';
@@ -517,6 +540,11 @@ StatsLogExpireInterval = {$statsduration}
 # information (and the command will run faster).
 StatusCmdShowAll = 0
 
+# Number of days that crash directories are kept.  Crash directories older
+# than this many days will be removed by "zeekctl cron".  A value of 0 means
+# that crash directories never expire.
+CrashExpireInterval = 0
+
 # Site-specific policy script to load. Zeek will look for this in
 # {$PREFIX}/share/zeek/site. A default local.zeek comes preinstalled
 # and can be customized as desired.
@@ -528,7 +556,7 @@ LogDir = {$logdir}
 
 # Location of the spool directory where files and data that are currently being
 # written are stored.
-SpoolDir = /usr/local/spool
+SpoolDir = {$spooldir}
 
 # Location of other configuration files that can be used to customize
 # ZeekControl operation (e.g. local networks, nodes).

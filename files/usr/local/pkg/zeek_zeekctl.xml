@@ -167,6 +167,20 @@
 			<required/>
 			<default_value>/usr/local/logs</default_value>
 		</field>
+		<field>
+			<fielddescr>Spool Store Directory</fielddescr>
+			<fieldname>spool_dir</fieldname>
+			<description>
+				<![CDATA[
+				Location of the spool directory where current files will be stored<br/>
+				Default: /usr/local/spool<br/>
+				]]>
+			</description>
+			<type>input</type>
+			<size>60</size>
+			<required/>
+			<default_value>/usr/local/spool</default_value>
+		</field>
 	</fields>
 	<custom_php_validation_command>
 		zeek_validate_zeekctl($_POST, $input_errors);
