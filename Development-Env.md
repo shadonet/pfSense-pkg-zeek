@@ -47,3 +47,4 @@ $ scp pfSense-pkg-zeek-3.0.6.txz root@<pfSense VM IP>:
 ```
 # pkg install pfSense-pkg-zeek-3.0.6.txz
 ```
+9. Test the new functionality via the web UI of pfSense
