@@ -10,13 +10,11 @@ For most people, it will be easiest to work in a FreeBSD VM.
 1. Create a FreeBSD VM on your favorite virtualization platform
 2. Install `git`: 
 ```
-# pkg update
-# pkg install git
+# pkg update && pkg install git
 ```
 3. Install `zeek` (will automatically install all dependencies):
 ```
-# pkg update
-# pkg install zeek
+# pkg update && pkg install zeek
 ```
 4. Clone repository to disk:
 ```
