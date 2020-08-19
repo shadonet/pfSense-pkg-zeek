@@ -55,6 +55,7 @@ Now, you can access the interface by login to pfSense and browse to **Services >
 
 - **Having an issue**? or looking for support? [Open an issue](https://github.com/shadonet/pfSense-pkg-bro/issues/new) and we will get you the help you need.
 - Got a **new feature or a bug fix**? Fork the repo, make your changes, and submit a pull request.
+- See the [Setting up a Development Environment](./Development-Env.md) page for instructions on how to set up your own development environment and generate packages.
 
 ## Support this project
 
