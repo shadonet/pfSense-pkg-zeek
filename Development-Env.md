@@ -8,7 +8,8 @@ For most people, it will be easiest to work in a FreeBSD VM.
 ## Steps to create development environment
 
 1. Create a FreeBSD VM on your favorite virtualization platform
-2. Install `git: ```
+2. Install `git`: 
+```
 # pkg update
 # pkg install git
 ```
