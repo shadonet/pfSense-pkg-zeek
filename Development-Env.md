@@ -38,13 +38,13 @@ $ scp pfSense-pkg-zeek-3.0.6.txz root@<pfSense VM IP>:
 ```
 5. SSH to the pfSense VM
 6. Drop to a shell (option 8 at the main menu)
-1. (If you haven't already) set `FreeBSD: { enabled: yes }` in `/usr/local/etc/pkg/repos/FreeBSD.conf` and `/usr/local/share/pfSense/pkg/repos/pfSense-repo.conf`
-7. Install `zeek`:
+7. (If you haven't already) set `FreeBSD: { enabled: yes }` in `/usr/local/etc/pkg/repos/FreeBSD.conf` and `/usr/local/share/pfSense/pkg/repos/pfSense-repo.conf`
+8. Install `zeek`:
 ```
 # pkg update && pkg install -y zeek
 ```
-8. Install the package:
+9. Install the package:
 ```
 # pkg install pfSense-pkg-zeek-3.0.6.txz
 ```
-9. Test the new functionality via the web UI of pfSense
+10. Test the new functionality via the web UI of pfSense
