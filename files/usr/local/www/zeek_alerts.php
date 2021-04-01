@@ -113,23 +113,23 @@ $( "#logfile" ).change(function() {
 });
 
 function updateSelect() {
-        var selected = $('#logfile').val();
+	var selected = $('#logfile').val();
 
-        var x = 'x='+$('#logfile').length;
-        jQuery.ajax({
-                type: "POST",
-                url: "select_box_file.php",
-                data: x,
-                success: function(html) {
-                        if (html) {
-                                $("#logfile").html(html);
+	var x = 'x='+$('#logfile').length;
+	jQuery.ajax({
+		type: "POST",
+		url: "select_box_file.php",
+		data: x,
+		success: function(html) {
+			if (html) {
+				$("#logfile").html(html);
 
-                                if (selected != 0 && selected != null && selected != undefined) {
-                                        $('#logfile').val(selected);
-                                }
-                        }
-                },
-        });
+				if (selected != 0 && selected != null && selected != undefined) {
+					$('#logfile').val(selected);
+				}
+			}
+		},
+	});
 }
 
 function showLog(content, url, program) {
