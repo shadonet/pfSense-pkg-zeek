@@ -124,7 +124,7 @@ function updateSelect() {
 			if (html) {
 				$("#logfile").html(html);
 
-				if (typeof selected !== undefined && selected) {
+				if (typeof selected !== 'undefined' && selected) {
 					$('#logfile').val(selected);
 				}
 			}
