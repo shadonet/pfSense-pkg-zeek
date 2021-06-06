@@ -20,7 +20,7 @@ By default, pfSense disables upstream pkg repositories (for good reason). So we 
 
 ```shell
 /usr/local/etc/pkg/repos/FreeBSD.conf
-/usr/local/share/pfSense/pkg/repos/pfSense-repo.conf
+/usr/local/share/pfSense/pkg/repos/pfSense-repo-245.conf
 ```
 
 Make it look like:
