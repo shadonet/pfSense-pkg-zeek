@@ -447,6 +447,7 @@ EOD;
 	chmod($networksfile, 0640);
 
 	zeek_sync_on_changes();
+	zeek_write_rcfile();
 	zeek_restart_services();
 	zeek_install_cron(true);
 }
