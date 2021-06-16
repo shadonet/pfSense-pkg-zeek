@@ -362,6 +362,16 @@ function zeek_validate_script($post, &$input_errors) {
 function zeek_settings_resync() {
 	global $config;
 
+	$networksfile =  ZEEK_ETC . '/networks.cfg';
+	$nodefile =  ZEEK_ETC . '/node.cfg';
+
+	if (!zeek_enabled()) {
+		zeek_restart_services();
+		zeek_install_cron(false);
+		unlink_if_exists("/usr/local/etc/rc.d/zeek.sh");
+		return;
+	}
+
 	init_config_arr(array('installedpackages', 'zeek', 'config'));
 	$settings = &$config['installedpackages']['zeek']['config'][0];
 
@@ -416,8 +426,6 @@ interface={$iface}
 
 EOD;
 
-		$nodefile =  ZEEK_ETC . '/node.cfg';
-
 		file_put_contents($nodefile, $conf);
 		chmod($nodefile, 0640);
 	}
@@ -434,7 +442,6 @@ EOD;
 	if (!empty($local_networks)) {
 		$conf .= "\n{$local_networks}";
 	}
-	$networksfile =  ZEEK_ETC . '/networks.cfg';
 
 	file_put_contents($networksfile, $conf);
 	chmod($networksfile, 0640);
