@@ -37,7 +37,7 @@ if (!function_exists("filter_configure")) {
 
 $shortcut_section = "zeek";
 
-define('ZEEK_LOCALBASE', '/usr/local/zeek');
+define('ZEEK_LOCALBASE', '/usr/local');
 define('ZEEK_ETC', ZEEK_LOCALBASE .'/etc');
 define('ZEEK_LOGDIR', ZEEK_LOCALBASE .'/logs/current');
 define('ZEEK_SITEDIR', ZEEK_LOCALBASE .'/share/zeek/site');
@@ -486,6 +486,9 @@ function zeek_zeekctl_resync() {
 
 # Recipient address for all emails sent out by Zeek and ZeekControl.
 MailTo = {$email}
+
+# Location of the sendmail binary
+SendMail = /usr/sbin/sendmail
 
 # Mail connection summary reports each log rotation interval.  A value of 1
 # means mail connection summaries, and a value of 0 means do not mail
