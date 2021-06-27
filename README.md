@@ -6,11 +6,11 @@ Zeek Network Security Monitor package for pfSense router/firewall
 
 ## Compatibility
 
-This package has been tested on **pfSense 2.4.5-RELEASE (amd64)**. Maybe it might not work with older versions of pfSense.
+This package has been tested on **pfSense 2.5.1-RELEASE (amd64)**. Maybe it might not work with older versions of pfSense.
 
 ## Installation
 
-## Download the generated package through [pfSense-pkg-zeek](https://github.com/shadonet/pfSense-pkg-bro/raw/master/data/pfSense-pkg-zeek-0.1.1.txz)
+## Download the generated package through [pfSense-pkg-zeek](https://github.com/shadonet/pfSense-pkg-bro/raw/master/data/pfSense-pkg-zeek-3.0.6.txz)
 
 ## Copy the package from your local machine to your firewall
 
@@ -38,7 +38,7 @@ pkg update && pkg install -y zeek
 Finally, copy the package to your firewall temporary folder.
 
 ```shell
-scp ~/Downloads/pfSense-pkg-zeek-0.1.1.txz root@firewall-ip-address:/tmp/
+scp ~/Downloads/pfSense-pkg-zeek-3.0.6.txz root@firewall-ip-address:/tmp/
 ```
 
 ## Install the package on the firewall via pkg add command
